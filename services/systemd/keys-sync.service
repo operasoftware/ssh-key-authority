@@ -1,0 +1,18 @@
+[Unit]
+Description=SSH Key synchronization daemon
+Documentation=https://github.com/operasoftware/SKA
+Requires=mysql.service
+
+[Service]
+Type=simple
+ExecStart=/srv/keys/scripts/syncd.php --systemd
+User=keys-sync
+StandardOutput=journal
+StandardError=journal
+PrivateDevices=on
+PrivateTmp=on
+ProtectHome=on
+ProtectSystem=on
+
+[Install]
+WantedBy=multi-user.target

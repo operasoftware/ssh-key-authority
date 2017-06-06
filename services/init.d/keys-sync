@@ -1,0 +1,39 @@
+#!/bin/sh
+
+### BEGIN INIT INFO
+# Provides:          keys-sync
+# Required-Start:    mysql
+# Required-Stop:     mysql
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: SSH key synchronization daemon
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+SCRIPT=/srv/keys/scripts/syncd.php
+PIDFILE=/var/run/keys-sync.pid
+
+test -f $SCRIPT || exit 0
+
+case "$1" in
+start)
+	log_daemon_msg "Starting keys-sync daemon"
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --startas $SCRIPT --
+	log_end_msg $?
+	;;
+stop)
+	log_daemon_msg "Stopping keys-sync daemon"
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name syncd.php --user keys-sync
+	log_end_msg $?
+	rm -f $PIDFILE
+	;;
+restart)
+	$0 stop && $0 start
+	;;
+*)
+	log_action_msg "Usage: /etc/init.d/keys-sync {start|stop|restart}"
+	exit 2
+	;;
+esac
+exit 0

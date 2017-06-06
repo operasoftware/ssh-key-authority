@@ -1,0 +1,190 @@
+/*
+##
+## Copyright 2013-2017 Opera Software AS
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+## http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##
+*/
+html,
+body {
+	height: 100%;
+	/* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+	min-height: 100%;
+	height: auto;
+	/* Negative indent footer by its height */
+	margin: 0 auto -60px;
+	/* Pad bottom by footer height */
+	padding: 0 0 60px;
+}
+#wrap > .container {
+	padding: 60px 15px 0;
+}
+#content *:first-child {
+	margin-top: 0;
+}
+.nav-tabs {
+	margin-bottom: 20px;
+}
+#footer {
+	height: 60px;
+	background-color: #f5f5f5;
+}
+#footer > .container {
+	padding: 20px 15px 0 15px;
+}
+.navbar-brand img {
+	height: 100%;
+	float: left;
+	margin-right: 1em;
+}
+.panel-group + p {
+	margin-top: 1em;
+}
+a.group, a.server, a.serveraccount, a.user {
+	white-space: nowrap;
+}
+a.group::before {
+	content: "\e032";
+	/*content: "\e056";*/
+	display: inline-block;
+	font-family: "Glyphicons Halflings";
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	position: relative;
+	top: 1px;
+	padding-right: 0.4em;
+}
+a.server::before {
+	content: "\e121";
+	display: inline-block;
+	font-family: "Glyphicons Halflings";
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	position: relative;
+	top: 1px;
+	padding-right: 0.4em;
+}
+a.serveraccount::before {
+	content: "\e161";
+	display: inline-block;
+	font-family: "Glyphicons Halflings";
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	position: relative;
+	top: 1px;
+	padding-right: 0.4em;
+}
+a.user::before {
+	content: "\e008";
+	display: inline-block;
+	font-family: "Glyphicons Halflings";
+	font-style: normal;
+	font-weight: 400;
+	line-height: 1;
+	position: relative;
+	top: 1px;
+	padding-right: 0.4em;
+}
+.input-group-addon label {
+	margin: 0;
+}
+.indented {
+	padding-left: 2em !important;
+}
+dl.oneline dt::before {
+	content: '\A';
+	white-space: pre;
+}
+dl.oneline dt:first-child::before {
+	white-space: normal;
+}
+dl.oneline dt {
+	display: inline;
+}
+dl.oneline dd {
+	display: inline;
+	padding-left: 0.5em;
+}
+dl.spaced dd {
+	margin-bottom: 1em;
+}
+ul.compact {
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+pre {
+	white-space: pre-wrap;
+}
+pre.ascii-art {
+	line-height: 1;
+}
+.pre-formatted {
+	word-break: break-all;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+span.date {
+	white-space: nowrap;
+}
+.nowrap {
+	white-space: nowrap;
+}
+.spinner {
+	display: inline-block;
+	width: 12px;
+	height: 12px;
+	-webkit-animation: spinner 1s infinite linear;
+	animation: spinner 1s infinite linear;
+	border-radius:7px;
+	border-left:2px solid gray;
+	border-bottom:2px solid gray;
+}
+@-webkit-keyframes spinner {
+	to {
+		-webkit-transform: rotate(360deg);
+	}
+}
+@keyframes spinner {
+	to {
+		transform: rotate(360deg);
+	}
+}
+.monospace {
+	font-family: monospace;
+}
+td.date {
+	width: 11em;
+}
+
+/* Now with 100% more pink! */
+div.navbar-default {
+	background-color: #fff1f9;
+	border-color: #f7e7f6;
+}
+.navbar-default .navbar-nav>.active>a, .navbar-default .navbar-nav>.active>a:focus, .navbar-default .navbar-nav>.active>a:hover {
+	background-color: #f7e7e7;
+}
+a {
+	color: #af3578;
+}
+a:focus, a:hover {
+	color: #611d42;
+}
