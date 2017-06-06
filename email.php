@@ -81,7 +81,7 @@ class Email {
 		$this->headers[] = "Precedence: bulk";
 		$this->flow();
 		$this->append_signature();
-		if($this->gpg_sign) {
+		if(function_exists('gnupg_init') && $this->gpg_sign) {
 			$this->sign();
 		}
 		if(is_null($this->from['name'])) {
