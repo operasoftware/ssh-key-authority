@@ -46,7 +46,7 @@ Installation
 
 4.  Import database schema (the schema file can be found in the repository):
 
-        mysql ska-db < schema.sql
+        mysql -u ska-user -p ska-db < schema.sql
 
 5.  Copy the file `config/config-sample.ini` to `config/config.ini` and edit the settings as required.
 
