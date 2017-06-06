@@ -332,7 +332,7 @@ function sync_server($id, $only_username = null, $preview = false) {
 		try {
 			$local_filename = tempnam('/tmp', 'syncfile');
 			$fh = fopen($local_filename, 'w');
-			fwrite($fh, $keyfile['keyfile'].$ska_key);
+			fwrite($fh, $keyfile['keyfile']."# SKA system key\n".$ska_key);
 			fclose($fh);
 			ssh2_scp_send($connection, $local_filename, '/root/.ssh/authorized_keys2', 0600);
 			unlink($local_filename);
