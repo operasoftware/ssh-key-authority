@@ -25,7 +25,7 @@ Requirements
 * PHP LDAP extension
 * PHP MySQL extension
 * PHP ssh2 extension
-* MySQL database
+* MySQL (5.5+), Percona Server (5.5+) or MariaDB database
 
 Installation
 ------------
@@ -41,7 +41,7 @@ Installation
 3.  Create a MySQL user and database (run in MySQL shell):
 
         CREATE USER 'ska-user'@'localhost' IDENTIFIED BY 'password';
-        CREATE DATABASE ska-db;
+        CREATE DATABASE ska-db DEFAULT CHARACTER SET utf8mb4;
         GRANT ALL ON ska-db.* to 'ska-user';
 
 4.  Import database schema (the schema file can be found in the repository):
