@@ -242,10 +242,6 @@ class ServerAccount extends Entity {
 	*/
 	public function approve_access_request(AccessRequest $request) {
 		if(is_null($this->entity_id)) throw new BadMethodCallException('Server account must be added to server before access can be approved');
-		if($this->sync_status == 'proposed') {
-			$this->sync_status = 'not synced yet';
-			$this->update();
-		}
 		$entity = $request->source_entity;
 		switch(get_class($entity)) {
 		case 'User':
@@ -320,6 +316,10 @@ class ServerAccount extends Entity {
 	public function add_access(Entity $entity, array $access_options) {
 		global $config;
 		if(is_null($this->entity_id)) throw new BadMethodCallException('Server account must be added to server before access can be added');
+		if($this->sync_status == 'proposed') {
+			$this->sync_status = 'not synced yet';
+			$this->update();
+		}
 		try {
 			$access = new Access;
 			$access->dest_entity_id = $this->entity_id;
