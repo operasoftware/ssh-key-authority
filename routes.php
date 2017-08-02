@@ -34,6 +34,7 @@ $routes = array(
 	'/servers/{hostname}' => 'server',
 	'/servers/{hostname}/accounts/{account}' => 'serveraccount',
 	'/servers/{hostname}/accounts/{account}/access_rules/{access}' => 'access_options',
+	'/servers/{hostname}/accounts/{account}/pubkeys.{format}' => 'serveraccount_pubkeys',
 	'/servers/{hostname}/accounts/{account}/sync_status' => 'serveraccount_sync_status',
 	'/servers/{hostname}/status.{format}' => 'server',
 	'/servers/{hostname}/sync_status' => 'server_sync_status',
