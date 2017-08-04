@@ -50,6 +50,7 @@ $routes = array(
 $public_routes = array(
 	'/groups/{group}/members.{format}' => true,
 	'/pubkeys/{key}.{format}' => true,
+	'/servers/{hostname}/accounts/{account}/pubkeys.{format}' => true,
 	'/users/{username}' => true,
 	'/users/{username}/pubkeys.{format}' => true,
 	'/users/{username}/pubkeys/{key}.{format}' => true,
