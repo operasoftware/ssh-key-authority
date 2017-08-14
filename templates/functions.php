@@ -118,11 +118,11 @@ function keygen_help($box_position) {
 			<ol>
 				<li>Download and run the latest Windows installer from the <a href="http://www.chiark.greenend.org.uk/~sgtatham/putty/download.html">PuTTY download page</a>.
 				<li>Start PuTTYgen.
+				<li>Select the type of key to generate. RSA, ECDSA or ED25519 are good choices.
+				<li>For RSA, enter "4096" as the number of bits in the generated key. For ECDSA, use either the nistp384 or nistp521 curve.
+				<li>Click the Generate button.
 				<li>Provide a comment for the key: it is a very good idea to include your user name and the current date in the comment to make the key easier to identify.
 				<li><strong>Provide a key passphrase.</strong>
-				<li>Select "SSH-2 RSA" as the type of key to generate.
-				<li>Enter "4096" as the number of bits in the generated key.
-				<li>Click the Generate button
 				<li>Save the private key to your local machine.
 				<li>Select and copy the contents of the "Public key for pasting into OpenSSH authorized_keys file" section at the top of the window (scrollable, make sure to select all).
 				<?php if(!is_null($box_position)) { ?>
