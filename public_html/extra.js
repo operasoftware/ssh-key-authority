@@ -143,16 +143,18 @@ $(function() {
 // Home page dynamic add pubkey form
 $(function() {
 	$('#add_key_button').on('click', function() {
-		$('#add_key_form').removeClass('hidden');
-		$('#add_key_button').addClass('hidden');
-		$('#public_key').focus();
+		$('#help').hide().removeClass('hidden');
+		$('#add_key_form').hide().removeClass('hidden');
+		$('#add_key_form').show('fast');
+		$('#add_key_button').hide();
+		$('#add_public_key').focus();
 	});
 	$('#add_key_form button[type=button].btn-info').on('click', function() {
-		$('#help').toggleClass('hidden');
+		$('#help').toggle('fast');
 	});
 	$('#add_key_form button[type=button].btn-default').on('click', function() {
-		$('#add_key_form').addClass('hidden');
-		$('#add_key_button').removeClass('hidden');
+		$('#add_key_form').hide('fast');
+		$('#add_key_button').show();
 	});
 });
 
