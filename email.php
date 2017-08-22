@@ -81,7 +81,7 @@ class Email {
 		$this->headers[] = "Precedence: bulk";
 		$this->flow();
 		$this->append_signature();
-		if(function_exists('gnupg_init') && $this->gpg_sign) {
+		if(function_exists('gnupg_init') && $this->gpg_sign && isset($config['gpg']['key_id'])) {
 			$this->sign();
 		}
 		if(is_null($this->from['name'])) {
@@ -214,8 +214,9 @@ class Email {
 	}
 
 	private function get_gpg_signature($message) {
+		global $config;
 		$gpg = new gnupg();
-		$gpg->addsignkey('5BF47B590E2629854FC99BCEE8D5397409381BE2');
+		$gpg->addsignkey($config['gpg']['key_id']);
 		$gpg->setsignmode(GNUPG::SIG_MODE_DETACH);
 		return $gpg->sign($message);
 	}
