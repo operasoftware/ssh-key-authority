@@ -9,6 +9,7 @@ Features
 * Easily manage SSH key access for all accounts on your servers.
 * Manage user access and server-to-server access rules.
 * Integrate with your LDAP directory service for user authorization.
+* Automatically remove server access from people when they leave your team.
 * Provides an easy interface for your users to upload their public keys.
 * Designate server administrators and let them manage access to their own server.
 * Create group-based access rules for easier management.
