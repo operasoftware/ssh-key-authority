@@ -44,18 +44,14 @@ Installation
         CREATE DATABASE ska-db DEFAULT CHARACTER SET utf8mb4;
         GRANT ALL ON ska-db.* to 'ska-user';
 
-4.  Import database schema (the schema file can be found in the repository):
+4.  Copy the file `config/config-sample.ini` to `config/config.ini` and edit the settings as required.
 
-        mysql -u ska-user -p ska-db < schema.sql
-
-5.  Copy the file `config/config-sample.ini` to `config/config.ini` and edit the settings as required.
-
-6.  Set up authnz_ldap for your virtual host (or any other authentication module that will pass on an Auth-user
+5.  Set up authnz_ldap for your virtual host (or any other authentication module that will pass on an Auth-user
     variable to the application).
 
-7.  Set `scripts/ldap_update.php` to run on a regular cron job.
+6.  Set `scripts/ldap_update.php` to run on a regular cron job.
 
-8.  Generate an SSH key pair to synchronize with. SSH Key Authority will expect to find the files as `config/keys-sync` and `config/keys-sync.pub` for the private and public keys respectively.
+7.  Generate an SSH key pair to synchronize with. SSH Key Authority will expect to find the files as `config/keys-sync` and `config/keys-sync.pub` for the private and public keys respectively.
 
 8.  Install the SSH key synchronization daemon. For systemd:
 

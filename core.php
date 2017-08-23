@@ -67,6 +67,7 @@ function setup_database() {
 	$database->set_charset('utf8mb4');
 	$driver = new mysqli_driver();
 	$driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
+	$migration_dir = new MigrationDirectory;
 	$pubkey_dir = new PublicKeyDirectory;
 	$user_dir = new UserDirectory;
 	$group_dir = new GroupDirectory;
