@@ -17,6 +17,18 @@ Features
 * All access changes are logged to the database and to the system logs. Granting of access is also reported by email.
 * Be notified when a server becomes orphaned (has no active administrators).
 
+Demo
+----
+
+You can view the SSH Key Authority in action on the [demonstration server](https://ska.xiven.com/).
+
+Use one of the following sets of username / password credentials to log in:
+
+* testuser / testuser - normal user with admin access granted to a few domains
+* testadmin / testadmin - admin user
+
+All data on this demonstration server is reset nightly at 00:00 UTC.
+
 Requirements
 ------------
 
