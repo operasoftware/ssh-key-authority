@@ -34,10 +34,10 @@ class LDAP {
 		$this->conn = ldap_connect($this->host);
 		if($this->conn === false) throw new LDAPConnectionFailureException('Invalid LDAP connection settings');
 		if($this->starttls) {
-			ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
 			if(!ldap_start_tls($this->conn)) throw new LDAPConnectionFailureException('Could not initiate TLS connection to LDAP server');
 		}
 		if(!empty($this->bind_dn)) {
+			ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
 			if(!ldap_bind($this->conn, $this->bind_dn, $this->bind_password)) throw new LDAPConnectionFailureException('Could not bind to LDAP server');
 		}
 	}
