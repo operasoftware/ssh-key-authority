@@ -91,6 +91,24 @@ StrictModes must be disabled because the files will all be owned by the keys-syn
 
 The file `/var/local/keys-sync/keys-sync` must exist, with the same contents as the `config/keys-sync.pub` file in order for the synchronization daemon to authenticate.
 
+Screenshots
+-----------
+
+### Homepage overview
+![Homepage overview](public_html/screenshot-home.png)
+
+### Server listing
+![Server listing](public_html/screenshot-servers.png)
+
+### Server account access management
+![Server account access management](public_html/screenshot-account.png)
+
+### Activity log
+![Activity log](public_html/screenshot-activity.png)
+
+### Getting started guide for new users
+![Getting started guide for new users](public_html/screenshot-getting-started.png)
+
 License
 -------
 
