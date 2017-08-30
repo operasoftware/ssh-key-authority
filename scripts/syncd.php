@@ -16,7 +16,7 @@
 ## limitations under the License.
 ##
 
-$options = getopt('', array('systemd'));
+$options = getopt('', array('systemd', 'user'));
 
 /**
 * Handle process control signals
@@ -48,7 +48,12 @@ if(!isset($options['systemd'])) {
 	$pidfile = '/var/run/keys-sync.pid';
 	$lockfile = '/var/run/keys-sync.lock';
 	$logfile = '/var/log/keys/sync.log';
-	$username = 'keys-sync';
+
+	if(!isset($options['user'])) {
+		fwrite(STDERR, "--user parameter must be provided");
+		exit(1);
+	}
+	$username = $options['user'];
 
 	if(posix_getuid() !== 0) {
 		fwrite(STDERR, "This command must be run as root\n");

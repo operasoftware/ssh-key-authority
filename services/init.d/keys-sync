@@ -12,6 +12,7 @@
 . /lib/lsb/init-functions
 
 SCRIPT=/srv/keys/scripts/syncd.php
+USER=keys-sync
 PIDFILE=/var/run/keys-sync.pid
 
 test -f $SCRIPT || exit 0
@@ -19,12 +20,12 @@ test -f $SCRIPT || exit 0
 case "$1" in
 start)
 	log_daemon_msg "Starting keys-sync daemon"
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --startas $SCRIPT --
+	start-stop-daemon --start --quiet --pidfile $PIDFILE --startas $SCRIPT --user $USER --
 	log_end_msg $?
 	;;
 stop)
 	log_daemon_msg "Stopping keys-sync daemon"
-	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name syncd.php --user keys-sync
+	start-stop-daemon --stop --quiet --pidfile $PIDFILE --name syncd.php --user $USER
 	log_end_msg $?
 	rm -f $PIDFILE
 	;;

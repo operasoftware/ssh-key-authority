@@ -1,6 +1,6 @@
 [Unit]
 Description=SSH Key synchronization daemon
-Documentation=https://github.com/operasoftware/SKA
+Documentation=https://github.com/operasoftware/ssh-key-authority
 Requires=mysql.service
 
 [Service]

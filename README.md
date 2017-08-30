@@ -69,13 +69,15 @@ Installation
 8.  Install the SSH key synchronization daemon. For systemd:
 
     1.  Copy `services/systemd/keys-sync.service` to `/etc/systemd/system/`
-    2.  `systemctl daemon-reload`
-    3.  `systemctl enable keys-sync.service`
+    2.  Modify `ExecStart` path and `User` as necessary. If SSH Key Authority is installed under `/home`, disable `ProtectHome`.
+    3.  `systemctl daemon-reload`
+    4.  `systemctl enable keys-sync.service`
 
     for sysv-init:
 
     1.  Copy `services/init.d/keys-sync` to `/etc/init.d/`
-    2.  `update-rc.d keys-sync defaults`
+    2.  Modify `SCRIPT` path and `USER` as necessary.
+    3.  `update-rc.d keys-sync defaults`
 
 Usage
 -----
