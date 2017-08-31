@@ -24,7 +24,7 @@ You can view the SSH Key Authority in action on the [demonstration server](https
 
 Use one of the following sets of username / password credentials to log in:
 
-* testuser / testuser - normal user with admin access granted to a few domains
+* testuser / testuser - normal user with admin access granted to a few servers
 * testadmin / testadmin - admin user
 
 All data on this demonstration server is reset nightly at 00:00 UTC.
