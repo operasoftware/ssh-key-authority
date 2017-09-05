@@ -38,6 +38,10 @@ if(empty($config['web']['enabled'])) {
 	die;
 }
 
+if(!$active_user->active) {
+	require('views/error403.php');
+}
+
 if(!empty($_POST)) {
 	// Check CSRF token
 	if(isset($_SERVER['HTTP_X_BYPASS_CSRF_PROTECTION']) && $_SERVER['HTTP_X_BYPASS_CSRF_PROTECTION'] == 1) {
