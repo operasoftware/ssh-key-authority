@@ -123,6 +123,7 @@ class ServerDirectory extends DBDirectory {
 					$where[] = "hostname REGEXP '".$this->database->escape_string($value)."'";
 					break;
 				case 'ip_address':
+				case 'rsa_key_fingerprint':
 					$where[] = "server.$field = '".$this->database->escape_string($value)."'";
 					break;
 				case 'admin':

@@ -23,6 +23,7 @@ if(file_exists('config/keys-sync.pub')) {
 }
 $content->set('admin_mail', $config['email']['admin_address']);
 $content->set('baseurl', $config['web']['baseurl']);
+$content->set('security_config', isset($config['security']) ? $config['security'] : array());
 
 $page = new PageSection('base');
 $page->set('title', 'Help');

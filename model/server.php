@@ -308,6 +308,7 @@ class Server extends Record {
 		if(is_null($this->id)) throw new BadMethodCallException('Server must be in directory before accounts can be added');
 		$account_name = $account->name;
 		if($account_name === '') throw new AccountNameInvalid('Account name cannot be empty');
+		if(substr($account_name, 0, 1) === '.') throw new AccountNameInvalid('Account name cannot begin with .');
 		$sync_status = is_null($account->sync_status) ? 'not synced yet' : $account->sync_status;
 		$this->database->begin_transaction();
 		$stmt = $this->database->prepare("INSERT INTO entity SET type = 'server account'");

@@ -16,6 +16,7 @@
 ##
 $admin_mail = $this->get('admin_mail');
 $baseurl = $this->get('baseurl');
+$security_config = $this->get('security_config');
 ?>
 <div class="panel-group" id="help">
 	<h1>Help</h1>
@@ -106,6 +107,10 @@ $baseurl = $this->get('baseurl');
 					<dd>SSH key authority was unable to establish an SSH connection to your server.  This could indicate that the server is offline or otherwise unreachable, or that the SSH server is not running.</dd>
 					<dt>SSH host key verification failed</dt>
 					<dd>SSH key authority was able to open an SSH connection to your server, but the host key no longer matches the one that is on record for your server.  If this is expected (eg. your server has been migrated to a new host), you can reset the host key on the "Settings" page of your server. Press the "Clear" button for the host key fingerprint and then "Save changes".</dd>
+					<?php if(!isset($security_config['host_key_collision_protection']) || $security_config['host_key_collision_protection'] == 1) { ?>
+					<dt>SSH host key collision</dt>
+					<dd>Your server has the same SSH host key as another server. This should be corrected by regenerating the SSH host keys on one or both of the affected servers.</dd>
+					<?php } ?>
 					<dt>SSH authentication failed</dt>
 					<dd>Although SSH key authority was able to connect to your server via SSH, it failed to log in.  See the guides for setting up <a data-toggle="collapse" data-parent="#help" href="#sync_setup">full account syncing</a> or <a data-toggle="collapse" data-parent="#help" href="#legacy_sync_setup">legacy root account syncing</a>.</dd>
 					<dt>SFTP subsystem failed</dt>
@@ -122,6 +127,12 @@ $baseurl = $this->get('baseurl');
 					</dd>
 					<dt>Multiple hosts with same IP address</dt>
 					<dd>At least one other host managed by SSH Key Authority resolves to the same IP address as your server.  SSH Key Authority will refuse to sync to either server until this is resolved.</dd>
+					<?php if(isset($security_config['hostname_verification']) && $security_config['hostname_verification'] >= 3) { ?>
+					<dt>Hostnames file missing</dt>
+					<dd>The <code>/var/local/keys-sync/.hostnames</code> file does not exist on the server. SSH Key Authority uses the contents of this file to verify that it is allowed to sync to your server.</dd>
+					<dt>Hostname check failed</dt>
+					<dd>The server name was not found in <code>/var/local/keys-sync/.hostnames</code> when SSH Key Authority tried to sync to your server.</dd>
+					<?php } ?>
 				</dl>
 			</div>
 		</div>
@@ -163,6 +174,9 @@ $baseurl = $this->get('baseurl');
 					<li>Create <code>/var/local/keys-sync/keys-sync</code> file (owned by keys-sync, permissions 0644) with the following SSH key in it:
 						<pre><?php out($this->get('keys-sync-pubkey'))?></pre>
 					</li>
+					<?php if(isset($security_config['hostname_verification']) && $security_config['hostname_verification'] >= 3) { ?>
+					<li>Create <code>/var/local/keys-sync/.hostnames</code> text file (owned by keys-sync, permissions 0644) with the server's hostname in it</li>
+					<?php } ?>
 				</ol>
 				<h5>Verify Stage 1 success</h5>
 				<p>Once Stage 1 has been deployed to your server, trigger a resync from SSH Key Authority. The server should no longer have the "Key directory does not exist" warning after syncing (the "Using legacy sync method" warning is expected at this point instead). You can check the contents of the <code>/var/local/keys-sync</code> directory to make sure that the access looks right.</p>

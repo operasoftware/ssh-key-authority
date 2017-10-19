@@ -42,11 +42,23 @@
 		</dd>
 	</dl>
 </form>
-<?php if($this->get('server')->ip_address && count($this->get('matching_servers')) > 1) { ?>
+<?php if($this->get('server')->ip_address && count($this->get('matching_servers_by_ip')) > 1) { ?>
 <div class="alert alert-danger">
 	<p>The hostname <?php out($this->get('server')->hostname)?> resolves to the same IP address as the following:</p>
 	<ul>
-		<?php foreach($this->get('matching_servers') as $matched_server) { ?>
+		<?php foreach($this->get('matching_servers_by_ip') as $matched_server) { ?>
+		<?php if($matched_server->hostname != $this->get('server')->hostname) { ?>
+		<li><a href="/servers/<?php out($matched_server->hostname, ESC_URL)?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
+		<?php } ?>
+		<?php } ?>
+	</ul>
+</div>
+<?php } ?>
+<?php if($this->get('server')->rsa_key_fingerprint && count($this->get('matching_servers_by_host_key')) > 1) { ?>
+<div class="alert alert-danger">
+	<p>The server has the same SSH host key as the following:</p>
+	<ul>
+		<?php foreach($this->get('matching_servers_by_host_key') as $matched_server) { ?>
 		<?php if($matched_server->hostname != $this->get('server')->hostname) { ?>
 		<li><a href="/servers/<?php out($matched_server->hostname, ESC_URL)?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
 		<?php } ?>
@@ -332,6 +344,11 @@
 					</div>
 				</div>
 			</div>
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+					<button type="submit" name="edit_server" value="1" class="btn btn-primary">Change settings</button>
+				</div>
+			</div>
 			<?php } else { ?>
 			<dl>
 				<dt>Key management</dt>
@@ -374,6 +391,7 @@
 				</dd>
 				<?php } ?>
 			</dl>
+			<?php if($this->get('server_admin_can_reset_host_key')) { ?>
 			<div class="form-group">
 				<label for="rsa_key_fingerprint" class="col-sm-2 control-label">Host key fingerprint</label>
 				<div class="col-sm-4">
@@ -383,12 +401,13 @@
 					<button type="button" class="btn btn-default" data-clear="rsa_key_fingerprint">Clear</button>
 				</div>
 			</div>
-			<?php } ?>
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
 					<button type="submit" name="edit_server" value="1" class="btn btn-primary">Change settings</button>
 				</div>
 			</div>
+			<?php } ?>
+			<?php } ?>
 		</form>
 	</div>
 	<div class="tab-pane fade" id="log">

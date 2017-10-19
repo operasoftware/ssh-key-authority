@@ -35,6 +35,7 @@ $all_groups = $group_dir->list_groups();
 $all_servers = $active_user->list_admined_servers();
 $all_accounts = $server->list_accounts();
 $ldap_access_options = $server->list_ldap_access_options();
+$server_admin_can_reset_host_key = (isset($config['security']) && isset($config['security']['host_key_reset_restriction']) && $config['security']['host_key_reset_restriction'] == 0);
 
 if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 	$server->sync_access();
@@ -123,7 +124,7 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 			$content->set('exception', $e);
 		}
 	}
-} elseif(isset($_POST['edit_server']) && $server_admin) {
+} elseif(isset($_POST['edit_server']) && $server_admin && $server_admin_can_reset_host_key) {
 	if($_POST['rsa_key_fingerprint'] == '') $server->rsa_key_fingerprint = null;
 	$server->update();
 	redirect('#settings');
@@ -291,7 +292,8 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 		$content->set('all_users', $all_users);
 		$content->set('last_sync', $server->get_last_sync_event());
 		$content->set('sync_requests', $server->list_sync_requests());
-		$content->set('matching_servers', $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'key_management' => array('keys'))));
+		$content->set('matching_servers_by_ip', $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'key_management' => array('keys'))));
+		$content->set('matching_servers_by_host_key', $server_dir->list_servers(array(), array('rsa_key_fingerprint' => $server->rsa_key_fingerprint, 'key_management' => array('keys'))));
 		$content->set('all_groups', $all_groups);
 		$content->set('all_servers', $all_servers);
 		$content->set('all_accounts', $all_accounts);
@@ -300,6 +302,7 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 		$content->set('email_config', $config['email']);
 		$content->set('inventory_config', $config['inventory']);
 		$content->set('default_accounts', isset($config['defaults']['account_groups']) ? $config['defaults']['account_groups'] : array());
+		$content->set('server_admin_can_reset_host_key', $server_admin_can_reset_host_key);
 		switch($server->sync_status) {
 		case 'sync success': $content->set('sync_class', 'success'); break;
 		case 'sync warning': $content->set('sync_class', 'warning'); break;

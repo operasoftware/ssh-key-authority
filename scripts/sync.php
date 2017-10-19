@@ -285,6 +285,16 @@ function sync_server($id, $only_username = null, $preview = false) {
 				return;
 			}
 		}
+		if(!isset($config['security']) || !isset($config['security']['host_key_collision_protection']) || $config['security']['host_key_collision_protection'] == 1) {
+			$matching_servers = $server_dir->list_servers(array(), array('rsa_key_fingerprint' => $server->rsa_key_fingerprint, 'key_management' => array('keys')));
+			if(count($matching_servers) > 1) {
+				echo date('c')." {$hostname}: Multiple hosts with same host key.\n";
+				$server->sync_report('sync failure', 'Multiple hosts with same host key');
+				$server->delete_all_sync_requests();
+				report_all_accounts_failed($keyfiles);
+				return;
+			}
+		}
 		try {
 			ssh2_auth_pubkey_file($connection, $attempt, 'config/keys-sync.pub', 'config/keys-sync');
 			echo date('c')." {$hostname}: Logged in as $attempt.\n";
@@ -326,6 +336,41 @@ function sync_server($id, $only_username = null, $preview = false) {
 
 	$account_errors = 0;
 	$cleanup_errors = 0;
+
+	if(isset($config['security']) && isset($config['security']['hostname_verification']) && $config['security']['hostname_verification'] >= 1) {
+		// Verify that we have mutual agreement with the server that we sync to it with this hostname
+		$allowed_hostnames = null;
+		if($config['security']['hostname_verification'] >= 2) {
+			// 2+ = Compare with /var/local/keys-sync/.hostnames
+			try {
+				$allowed_hostnames = array_map('trim', file("ssh2.sftp://$sftp/var/local/keys-sync/.hostnames"));
+			} catch(ErrorException $e) {
+				if($config['security']['hostname_verification'] >= 3) {
+					// 3+ = Abort if file does not exist
+					echo date('c')." {$hostname}: Hostnames file missing.\n";
+					$server->sync_report('sync failure', 'Hostnames file missing');
+					$server->delete_all_sync_requests();
+					report_all_accounts_failed($keyfiles);
+					return;
+				} else {
+					$allowed_hostnames = null;
+				}
+			}
+		}
+		if(is_null($allowed_hostnames)) {
+			$stream = ssh2_exec($connection, '/bin/hostname -f');
+			stream_set_blocking($stream, true);
+			$allowed_hostnames = array(trim(stream_get_contents($stream)));
+			fclose($stream);
+		}
+		if(!in_array($hostname, $allowed_hostnames)) {
+			echo date('c')." {$hostname}: Hostname check failed (allowed: ".implode(", ", $allowed_hostnames).").\n";
+			$server->sync_report('sync failure', 'Hostname check failed');
+			$server->delete_all_sync_requests();
+			report_all_accounts_failed($keyfiles);
+			return;
+		}
+	}
 
 	if($legacy && isset($keyfiles['root'])) {
 		// Legacy sync (only if using root account)
@@ -408,7 +453,7 @@ function sync_server($id, $only_username = null, $preview = false) {
 		if(is_null($only_username)) {
 			// Clean up directory
 			foreach($sha1sums as $file => $sha1sum) {
-				if($file != '' && $file != 'keys-sync') {
+				if($file != '' && $file != 'keys-sync' && $file != '.hostnames') {
 					try {
 						if(ssh2_sftp_unlink($sftp, "$keydir/$file")) {
 							echo date('c')." {$hostname}: Removed unknown file: {$file}\n";
