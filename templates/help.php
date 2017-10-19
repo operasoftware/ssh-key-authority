@@ -103,17 +103,17 @@ $baseurl = $this->get('baseurl');
 			<div class="panel-body">
 				<dl class="spaced">
 					<dt>SSH connection failed</dt>
-					<dd>The keys system was unable to establish an SSH connection to your server.  This could indicate that the server is offline or otherwise unreachable, or that the SSH server is not running.</dd>
+					<dd>SSH key authority was unable to establish an SSH connection to your server.  This could indicate that the server is offline or otherwise unreachable, or that the SSH server is not running.</dd>
 					<dt>SSH host key verification failed</dt>
-					<dd>The keys system was able to open an SSH connection to your server, but the host key no longer matches the one that is on record for your server.  If this is expected (eg. your server has been migrated to a new host), you can reset the host key on the "Settings" page of your server. Press the "Clear" button for the host key fingerprint and then "Save changes".</dd>
+					<dd>SSH key authority was able to open an SSH connection to your server, but the host key no longer matches the one that is on record for your server.  If this is expected (eg. your server has been migrated to a new host), you can reset the host key on the "Settings" page of your server. Press the "Clear" button for the host key fingerprint and then "Save changes".</dd>
 					<dt>SSH authentication failed</dt>
-					<dd>Although the keys system was able to connect to your server via SSH, it failed to log in.  See the guides for setting up <a data-toggle="collapse" data-parent="#help" href="#sync_setup">full account syncing</a> or <a data-toggle="collapse" data-parent="#help" href="#legacy_sync_setup">legacy root account syncing</a>.</dd>
+					<dd>Although SSH key authority was able to connect to your server via SSH, it failed to log in.  See the guides for setting up <a data-toggle="collapse" data-parent="#help" href="#sync_setup">full account syncing</a> or <a data-toggle="collapse" data-parent="#help" href="#legacy_sync_setup">legacy root account syncing</a>.</dd>
 					<dt>SFTP subsystem failed</dt>
-					<dd>The keys system currently relies on SFTP in order to determine if an account's key file needs updating or not.  We are hoping to remove this dependency at some point, but for now your server needs to support SFTP (which openssh does by default) for key synchronization to work.</dd>
+					<dd>SSH key authority currently relies on SFTP in order to determine if an account's key file needs updating or not.  We are hoping to remove this dependency at some point, but for now your server needs to support SFTP (which openssh does by default) for key synchronization to work.</dd>
 					<dt><em>x</em> account(s) failed to sync</dt>
 					<dt>Failed to clean up <em>x</em> file(s)</dt>
 					<dd>
-						The keys system could not write to at least one of the files in <code>/var/local/keys-sync</code> (or <code>/root/.ssh/authorized_keys2</code> for legacy sync).  This is typically caused by one of 3 possibilities:
+						SSH key authority could not write to at least one of the files in <code>/var/local/keys-sync</code> (or <code>/root/.ssh/authorized_keys2</code> for legacy sync).  This is typically caused by one of 3 possibilities:
 						<ul>
 							<li>Issues with file ownership - this directory and all files in it must be owned by the keys-sync user</li>
 							<li>Read-only filesystem</li>
