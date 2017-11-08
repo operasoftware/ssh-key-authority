@@ -1,6 +1,8 @@
 SKA - SSH Key Authority
 =======================
 
+*Please see the [Security Advisories](#security-advisories) section below for a recently addressed security issue*
+
 A tool for managing user and server SSH access to any number of servers.
 
 Features
@@ -122,6 +124,10 @@ Screenshots
 
 ### Getting started guide for new users
 ![Getting started guide for new users](public_html/screenshot-getting-started.png)
+
+Security advisories
+-------------------
+[SKA security advisory: SSH port redirection attack](https://github.com/operasoftware/ssh-key-authority/wiki/SKA-security-advisory%3A-SSH-port-redirection-attack)
 
 License
 -------
