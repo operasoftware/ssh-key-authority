@@ -21,6 +21,7 @@ try {
 	require('views/error404.php');
 	die;
 }
+$access = $user->list_remote_access();
 $admined_servers = $user->list_admined_servers(array('pending_requests'));
 $admined_groups = $user->list_admined_groups(array('members', 'admins'));
 $groups = $user->list_group_memberships(array('members', 'admins'));
@@ -53,6 +54,7 @@ if(isset($_POST['reassign_servers']) && is_array($_POST['servers']) && $active_u
 } else {
 	$content = new PageSection('user');
 	$content->set('user', $user);
+	$content->set('user_access', $access);
 	$content->set('user_admined_servers', $admined_servers);
 	$content->set('user_admined_groups', $admined_groups);
 	$content->set('user_groups', $groups);

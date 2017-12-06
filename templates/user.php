@@ -112,7 +112,46 @@
 			</tbody>
 		</table>
 		<?php } ?>
-		<h3>Servers</h3>
+		<h3>Access</h3>
+		<?php if(count($this->get('user_access')) == 0) { ?>
+		<p><?php out($this->get('user')->name)?> has not been explicitly granted access to any entities.</p>
+		<?php } else { ?>
+		<p><?php out($this->get('user')->name)?> has been explicitly granted access to the following entities:</p>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Entity</th>
+					<th>Granted by</th>
+					<th>Granted on</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach($this->get('user_access') as $access) { ?>
+				<tr>
+					<td>
+						<?php
+						switch(get_class($access->dest_entity)) {
+						case 'ServerAccount':
+						?>
+						<a href="/servers/<?php out($access->dest_entity->server->hostname, ESC_URL)?>/accounts/<?php out($access->dest_entity->name, ESC_URL)?>" class="serveraccount"><?php out($access->dest_entity->name.'@'.$access->dest_entity->server->hostname)?></a>
+						<?php
+							break;
+						case 'Group':
+						?>
+						<a href="/groups/<?php out($access->dest_entity->name, ESC_URL)?>" class="group"><?php out($access->dest_entity->name)?></a>
+						<?php
+							break;
+						}
+						?>
+					</td>
+					<td><a href="/users/<?php out($access->granted_by->uid, ESC_URL)?>" class="user"><?php out($access->granted_by->uid)?></a></td>
+					<td><?php out($access->grant_date) ?></td>
+				</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		<?php } ?>
+		<h3>Server administration</h3>
 		<?php if(count($this->get('user_admined_servers')) == 0) { ?>
 		<p><?php out($this->get('user')->name)?> is not an administrator for any servers.</p>
 		<?php } else { ?>
