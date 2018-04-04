@@ -138,12 +138,10 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 	case 'server_account':
 		try {
 			$server_remote = $server_dir->get_server_by_hostname($_POST['hostname_remote']);
-		} catch(ServerNotFoundException $e) {
-			$content = new PageSection('server_not_found');
-		}
-		try {
 			$from = $server_remote->get_account_by_name($_POST['account_remote']);
 			$from_description = " from {$from->name}@{$server_remote->hostname}";
+		} catch(ServerNotFoundException $e) {
+			$content = new PageSection('server_not_found');
 		} catch(ServerAccountNotFoundException $e) {
 			$content = new PageSection('server_account_not_found');
 		}
