@@ -17,6 +17,7 @@
 
 $content = new PageSection('error500');
 $content->set('error_number', $error_number);
+$content->set('admin_address', isset($config) ? $config['email']['admin_address'] : null);
 if(isset($active_user) && is_object($active_user) && isset($e)) {
 	if($active_user->developer) {
 		$content->set('exception_class', get_class($e));

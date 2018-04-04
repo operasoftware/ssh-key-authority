@@ -50,5 +50,5 @@
 </table>
 <?php } else { ?>
 <h1>Oops! Something went wrong!</h1>
-<p>Sorry, but it looks like something needs fixing on the system.  The problem has been automatically reported to the administrators, but if you wish, you can also <a href="mailto:<?php out($config['email']['admin_address'])?>?subject=<?php out('SSH Key Authority error number '.$this->get('error_number'), ESC_URL_ALL)?>">provide additional information</a> about what you were doing that may have triggered the error.</p>
+<p>Sorry, but it looks like something needs fixing on the system.  The problem has been automatically reported to the administrators, but if you wish, you can also <a href="mailto:<?php out($this->get('admin_address'))?>?subject=<?php out('SSH Key Authority error number '.$this->get('error_number'), ESC_URL_ALL)?>">provide additional information</a> about what you were doing that may have triggered the error.</p>
 <?php } ?>
