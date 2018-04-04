@@ -553,13 +553,13 @@
 			<div class="input-group">
 				<span class="input-group-addon">From: </span>
 				<span class="input-group-addon"><label for="account"><span class="glyphicon glyphicon-log-in" title="Server account"></span><span class="sr-only">Account name</span></label></span>
-				<input type="text" id="account_remote" name="account_remote" class="form-control" placeholder="Account name">
+				<input type="text" id="account_remote" name="account_remote" class="form-control" placeholder="Account name" required pattern=".*[^\s].*">
 			</div>
 		</div>
 		<div class="form-group col-sm-3">
 			<div class="input-group">
 				<span class="input-group-addon"><label for="hostname">@</label></span>
-				<input type="text" id="hostname_remote" name="hostname_remote" class="form-control" placeholder="Hostname" list="serverlist">
+				<input type="text" id="hostname_remote" name="hostname_remote" class="form-control" placeholder="Hostname" list="serverlist" required>
 				<datalist id="serverlist">
 					<?php foreach($this->get('all_servers') as $server) { ?>
 					<option value="<?php out($server->hostname)?>">
@@ -567,8 +567,9 @@
 				</datalist>
 			</div>
 		</div>
-	</div><div class="row">
-		 <div class="col-sm-5">
+	</div>
+	<div class="row">
+		<div class="col-sm-5">
 			<label for="account_name_s2s" class="sr-only">Account name</label>
 			<div class="input-group">
 				<span class="input-group-addon">To: </span>
@@ -590,7 +591,7 @@
 		<div class="form-group col-sm-5">
 			 <div class="input-group">
 				<span class="input-group-addon"><label for="account"><span class="glyphicon glyphicon-list-alt" title="Group account"></span><span class="sr-only">Group name</span></label></span>
-				<input type="text" id="group_account" name="group_account" class="form-control" placeholder="Group name" list="grouplist">
+				<input type="text" id="group_account" name="group_account" class="form-control" placeholder="Group name" list="grouplist" required>
 				<datalist id="grouplist">
 					<?php foreach($this->get('all_groups') as $group) { ?>
 					<option value="<?php out($group->name)?>">
