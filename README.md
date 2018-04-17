@@ -38,6 +38,7 @@ Requirements
 * PHP 5.6 or higher
 * PHP JSON extension
 * PHP LDAP extension
+* PHP mbstring (Multibyte String) extension
 * PHP MySQL extension
 * PHP ssh2 extension
 * MySQL (5.5+), Percona Server (5.5+) or MariaDB database
