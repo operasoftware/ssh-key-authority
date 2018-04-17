@@ -32,10 +32,10 @@ class PageSection {
 		$this->data->menu_items['/users'] = 'Users';
 		$this->data->menu_items['/groups'] = 'Groups';
 		$this->data->menu_items['/pubkeys'] = 'Public keys';
-		if($active_user->admin || count($active_user->list_admined_servers()) > 0) {
+		if($active_user && ($active_user->admin || count($active_user->list_admined_servers()) > 0)) {
 			$this->data->menu_items['/activity'] = 'Activity';
 		}
-		if($active_user->admin) {
+		if($active_user && $active_user->admin) {
 			$this->data->menu_items['/tools'] = 'Tools';
 		}
 		$this->data->menu_items['/help'] = 'Help';
@@ -43,7 +43,7 @@ class PageSection {
 		$this->data->active_user = $active_user;
 		$this->data->web_config = $config['web'];
 		$this->data->email_config = $config['email'];
-		if($active_user->developer) {
+		if($active_user && $active_user->developer) {
 			$this->data->database = $database;
 		}
 	}
