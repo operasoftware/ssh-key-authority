@@ -45,6 +45,7 @@ if(isset($_POST['add_server'])) {
 		if(count($admins) == count($admin_names)) {
 			$server = new Server;
 			$server->hostname = $hostname;
+			$server->port = $_POST['port'];
 			try {
 				$server_dir->add_server($server);
 				foreach($admins as $admin) {

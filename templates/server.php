@@ -263,6 +263,12 @@
 				</div>
 			</div>
 			<div class="form-group">
+				<label for="port" class="col-sm-2 control-label">SSH port number</label>
+				<div class="col-sm-2">
+					<input type="number" id="port" name="port" value="<?php out($this->get('server')->port)?>" required class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
 				<label for="rsa_key_fingerprint" class="col-sm-2 control-label">Host key fingerprint</label>
 				<div class="col-sm-4">
 					<input type="text" id="rsa_key_fingerprint" name="rsa_key_fingerprint" value="<?php out($this->get('server')->rsa_key_fingerprint)?>" readonly class="form-control">
@@ -351,6 +357,8 @@
 			</div>
 			<?php } else { ?>
 			<dl>
+				<dt>SSH port number</dt>
+				<dd><?php out($this->get('server')->port)?></dd>
 				<dt>Key management</dt>
 				<dd>
 					<?php

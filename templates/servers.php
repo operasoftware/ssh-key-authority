@@ -176,6 +176,10 @@
 				<input type="text" id="hostname" name="hostname" class="form-control" required>
 			</div>
 			<div class="form-group">
+				<label for="port">SSH port number</label>
+				<input type="number" id="port" name="port" class="form-control" value="22" required>
+			</div>
+			<div class="form-group">
 				<label for="server_admin">Administrators</label>
 				<input type="text" id="server_admins" name="admins" class="form-control hidden" required>
 				<input type="text" id="server_admin" name="admin" class="form-control" placeholder="Type user/group name and press 'Enter' key" list="adminlist">

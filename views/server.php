@@ -110,6 +110,7 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 		}
 		$server->update_ldap_access_options($options);
 		$server->hostname = $hostname;
+		$server->port = $_POST['port'];
 		if($_POST['rsa_key_fingerprint'] == '') $server->rsa_key_fingerprint = null;
 		$server->key_management = $_POST['key_management'];
 		$server->authorization = $_POST['authorization'];
