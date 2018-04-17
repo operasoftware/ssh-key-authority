@@ -57,8 +57,8 @@ Installation
 3.  Create a MySQL user and database (run in MySQL shell):
 
         CREATE USER 'ska-user'@'localhost' IDENTIFIED BY 'password';
-        CREATE DATABASE ska-db DEFAULT CHARACTER SET utf8mb4;
-        GRANT ALL ON ska-db.* to 'ska-user';
+        CREATE DATABASE `ska-db` DEFAULT CHARACTER SET utf8mb4;
+        GRANT ALL ON `ska-db`.* to 'ska-user'@'localhost';
 
 4.  Copy the file `config/config-sample.ini` to `config/config.ini` and edit the settings as required.
 
