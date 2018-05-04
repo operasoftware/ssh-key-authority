@@ -71,7 +71,7 @@
 		?>
 		<tr>
 			<td>
-				<a href="/pubkeys/<?php out($pubkey->id, ESC_URL)?>">
+				<a href="<?php outurl('/pubkeys/'.urlencode($pubkey->id))?>">
 					<span class="fingerprint_md5"><?php out($pubkey->fingerprint_md5)?></span>
 					<span class="fingerprint_sha256"><?php out($pubkey->fingerprint_sha256)?></span>
 				</a>
@@ -84,13 +84,13 @@
 				switch(get_class($pubkey->owner)) {
 				case 'User':
 				?>
-				<a href="/users/<?php out($pubkey->owner->uid, ESC_URL)?>" class="user"><?php out($pubkey->owner->uid)?></a>
+				<a href="<?php outurl('/users/'.urlencode($pubkey->owner->uid))?>" class="user"><?php out($pubkey->owner->uid)?></a>
 				<?php if(!$pubkey->owner->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 				<?php
 					break;
 				case 'ServerAccount':
 				?>
-				<a href="/servers/<?php out($pubkey->owner->server->hostname, ESC_URL)?>/accounts/<?php out($pubkey->owner->name, ESC_URL)?>" class="serveraccount"><?php out($pubkey->owner->name.'@'.$pubkey->owner->server->hostname)?></a>
+				<a href="<?php outurl('/servers/'.urlencode($pubkey->owner->server->hostname))?>/accounts/<?php out($pubkey->owner->name, ESC_URL)?>" class="serveraccount"><?php out($pubkey->owner->name.'@'.$pubkey->owner->server->hostname)?></a>
 				<?php if($pubkey->owner->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 				<?php
 					break;

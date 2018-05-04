@@ -52,12 +52,12 @@ if(isset($_POST['add_server'])) {
 					$server->add_admin($admin);
 				}
 				$alert = new UserAlert;
-				$alert->content = 'Server \'<a href="/servers/'.urlencode($hostname).'" class="alert-link">'.hesc($hostname).'</a>\' successfully created.';
+				$alert->content = 'Server \'<a href="'.rrurl('/servers/'.urlencode($hostname)).'" class="alert-link">'.hesc($hostname).'</a>\' successfully created.';
 				$alert->escaping = ESC_NONE;
 				$active_user->add_alert($alert);
 			} catch(ServerAlreadyExistsException $e) {
 				$alert = new UserAlert;
-				$alert->content = 'Server \'<a href="/servers/'.urlencode($hostname).'" class="alert-link">'.hesc($hostname).'</a>\' is already known by SSH Key Authority.';
+				$alert->content = 'Server \'<a href="'.rrurl('/servers/'.urlencode($hostname)).'" class="alert-link">'.hesc($hostname).'</a>\' is already known by SSH Key Authority.';
 				$alert->escaping = ESC_NONE;
 				$alert->class = 'danger';
 				$active_user->add_alert($alert);

@@ -64,7 +64,7 @@
 		<?php if(count($this->get('groups')) == 0) { ?>
 		<p>No groups found.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-striped">
 				<thead>
@@ -80,12 +80,12 @@
 				<tbody>
 					<?php foreach($this->get('groups') as $group) { ?>
 					<tr<?php if(!$group->active) out(' class="text-muted"', ESC_NONE) ?>>
-						<td><a href="/groups/<?php out($group->name, ESC_URL) ?>" class="group<?php if(!$group->active) out(' text-muted') ?>"><?php out($group->name) ?></a></td>
+						<td><a href="<?php outurl('/groups/'.urlencode($group->name)) ?>" class="group<?php if(!$group->active) out(' text-muted') ?>"><?php out($group->name) ?></a></td>
 						<td><?php out(number_format($group->member_count))?></td>
 						<td><?php out($group->admins)?></td>
 						<?php if($this->get('admin')) { ?>
 						<td>
-							<a href="<?php out($this->data->relative_request_url.'/'.urlencode($group->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage group</a>
+							<a href="<?php outurl('/groups/'.urlencode($group->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage group</a>
 						</td>
 						<?php } ?>
 					</tr>
@@ -98,7 +98,7 @@
 	<?php if($this->get('admin')) { ?>
 	<div class="tab-pane fade" id="add">
 		<h2 class="sr-only">Add group</h2>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="name" class="sr-only">Group name</label>

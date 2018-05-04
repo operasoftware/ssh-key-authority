@@ -15,7 +15,7 @@
 ## limitations under the License.
 ##
 ?>
-<h1>Public keys for <a href="/users/<?php out($this->get('user')->uid, ESC_URL)?>"><?php out($this->get('user')->name)?></a></h1>
+<h1>Public keys for <a href="<?php outurl('/users/'.urlencode($this->get('user')->uid))?>"><?php out($this->get('user')->name)?></a></h1>
 <?php foreach($this->get('pubkeys') as $pubkey) { ?>
 <div class="panel panel-default">
 	<dl class="panel-body">

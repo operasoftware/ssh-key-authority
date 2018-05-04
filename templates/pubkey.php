@@ -23,13 +23,13 @@ $owner = $this->get('pubkey')->owner;
 	case 'User':
 		$name = $owner->name;
 	?>
-	<a href="/users/<?php out($owner->uid, ESC_URL)?>" class="user"><?php out($name)?></a>
+	<a href="<?php outurl('/users/'.urlencode($owner->uid))?>" class="user"><?php out($name)?></a>
 	<?php
 		break;
 	case 'ServerAccount':
 		$name = $owner->name.'@'.$owner->server->hostname;
 	?>
-	<a href="/servers/<?php out($owner->server->hostname, ESC_URL)?>/accounts/<?php out($owner->name, ESC_URL)?>" class="serveraccount"><?php out($name)?></a>
+	<a href="<?php outurl('/servers/'.urlencode($owner->server->hostname).'/accounts/'.urlencode($owner->name))?>" class="serveraccount"><?php out($name)?></a>
 	<?php
 		break;
 	}
@@ -63,7 +63,7 @@ $owner = $this->get('pubkey')->owner;
 	<?php if($this->get('user_is_owner') || $this->get('admin')) { ?>
 	<div class="tab-pane" id="sig">
 		<h2 class="sr-only">Key signing</h2>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" enctype="multipart/form-data">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" enctype="multipart/form-data">
 			<?php if(count($this->get('signatures')) == 0) { ?>
 			<p>No signatures have been uploaded for this key yet.</p>
 			<?php } else { ?>
@@ -107,7 +107,7 @@ $owner = $this->get('pubkey')->owner;
 		<p>This key will currently be synced to all accounts and servers that <?php out($name)?> is granted access to.  To restrict this key to a subset of that list, add rules below.</p>
 		<?php } else { ?>
 		<p>This key will only be synced to accounts and servers that <?php out($name)?> is granted access to that also match the following rules:</p>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -129,7 +129,7 @@ $owner = $this->get('pubkey')->owner;
 			</table>
 		</form>
 		<?php } ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add new rule</h3>
 			<p>You can make use of wildcards (<kbd>*</kbd>) in each field below.</p>

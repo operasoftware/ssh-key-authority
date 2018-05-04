@@ -17,7 +17,7 @@
 ?>
 <h1>Bulk mail <?php out(str_replace('_', ' ', $this->get('recipients')))?></h1>
 <div class="alert alert-warning">This form will send a mail to <strong>all</strong> <?php out($this->get('rcpt_desc'))?> the SSH Key Authority system!</div>
-<form method="post" action="/bulk_mail/<?php out($this->get('recipients'), ESC_URL)?>">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<div class="form-group">
 		<label for="subject">Subject</label>

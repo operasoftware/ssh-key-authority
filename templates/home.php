@@ -21,7 +21,7 @@
 <h2>Getting started</h2>
 <p>To start using the key management system, you must first generate a "key pair".  The instructions for doing this vary based on your computer's Operating System (OS).</p>
 <?php keygen_help('below') ?>
-<form method="post" action="/">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<div class="form-group">
 		<label for="public_key">Public key</label>
@@ -49,19 +49,19 @@
 			<tr>
 				<td><?php out($key->type) ?></td>
 				<td>
-					<a href="/users/<?php out($this->get('uid'), ESC_URL)?>/pubkeys/<?php out($key->id, ESC_URL)?>#info">
+					<a href="<?php outurl('/users/'.urlencode($this->get('uid')).'/pubkeys/'.urlencode($key->id).'#info')?>">
 						<span class="fingerprint_md5"><?php out($key->fingerprint_md5) ?></span>
 						<span class="fingerprint_sha256"><?php out($key->fingerprint_sha256) ?></span>
 					</a>
 				</td>
 				<td>
-					<?php if(count($key->list_signatures()) > 0) { ?><a href="/users/<?php out($this->get('uid'), ESC_URL)?>/pubkeys/<?php out($key->id, ESC_URL)?>#sig"><span class="glyphicon glyphicon-pencil" title="Signed key"></span></a><?php } ?>
-					<?php if(count($key->list_destination_rules()) > 0) { ?><a href="/users/<?php out($this->get('uid'), ESC_URL)?>/pubkeys/<?php out($key->id, ESC_URL)?>#dest"><span class="glyphicon glyphicon-pushpin" title="Destination-restricted"></span></a><?php } ?>
+					<?php if(count($key->list_signatures()) > 0) { ?><a href="<?php outurl('/users/'.urlencode($this->get('uid')).'/pubkeys/'.urlencode($key->id).'#sig')?>"><span class="glyphicon glyphicon-pencil" title="Signed key"></span></a><?php } ?>
+					<?php if(count($key->list_destination_rules()) > 0) { ?><a href="<?php outurl('/users/'.urlencode($this->get('uid')).'/pubkeys/'.urlencode($key->id).'#dest')?>"><span class="glyphicon glyphicon-pushpin" title="Destination-restricted"></span></a><?php } ?>
 				</td>
 				<td><?php out($key->keysize) ?></td>
 				<td><?php out($key->comment) ?></td>
 				<td>
-					<a href="/users/<?php out($this->get('uid'), ESC_URL)?>/pubkeys/<?php out($key->id, ESC_URL)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage public key</a>
+					<a href="<?php outurl('/users/'.urlencode($this->get('uid')).'/pubkeys/'.urlencode($key->id))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage public key</a>
 					<button type="submit" name="delete_public_key" value="<?php out($key->id) ?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete public key</button>
 				</td>
 			</tr>
@@ -70,7 +70,7 @@
 	</table>
 </form>
 <p><button id="add_key_button" class="btn btn-default">Add another public key</button></p>
-<form method="post" action="/" class="hidden" id="add_key_form">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="hidden" id="add_key_form">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<div class="form-group">
 		<label for="add_public_key">Public key</label>
@@ -124,9 +124,9 @@
 		?>
 		<tr>
 			<td rowspan="2">
-				<a href="/servers/<?php out($server->hostname, ESC_URL) ?>" class="server"><?php out($server->hostname) ?></a>
+				<a href="<?php outurl('/servers/'.urlencode($server->hostname)) ?>" class="server"><?php out($server->hostname) ?></a>
 				<?php if($server->pending_requests > 0) { ?>
-				<a href="/servers/<?php out($server->hostname, ESC_URL) ?>#requests"><span class="badge" title="Pending requests"><?php out(number_format($server->pending_requests)) ?></span></a>
+				<a href="<?php outurl('/servers/'.urlencode($server->hostname).'#requests') ?>"><span class="badge" title="Pending requests"><?php out(number_format($server->pending_requests)) ?></span></a>
 				<?php } ?>
 			</td>
 			<td>
@@ -167,7 +167,7 @@
 			<td colspan="2" class="indented">
 				<dl class="oneline">
 					<?php foreach($server->list_accounts() as $server_account) { ?>
-					<dt><a href="/servers/<?php out($server->hostname, ESC_URL)?>/accounts/<?php out($server_account->name, ESC_URL)?>" class="serveraccount"><?php out($server_account->name) ?></a>:</dt>
+					<dt><a href="<?php outurl('/servers/'.urlencode($server->hostname).'/accounts/'.urlencode($server_account->name))?>" class="serveraccount"><?php out($server_account->name) ?></a>:</dt>
 					<?php
 					$list = array();
 					foreach($server_account->list_access() as $access) {

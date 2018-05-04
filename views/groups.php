@@ -33,12 +33,12 @@ if(isset($_POST['add_group'])) {
 				$group_dir->add_group($group);
 				$group->add_admin($new_admin);
 				$alert = new UserAlert;
-				$alert->content = 'Group \'<a href="/groups/'.urlencode($name).'" class="alert-link">'.hesc($name).'</a>\' successfully created.';
+				$alert->content = 'Group \'<a href="'.rrurl('/groups/'.urlencode($name)).'" class="alert-link">'.hesc($name).'</a>\' successfully created.';
 				$alert->escaping = ESC_NONE;
 				$active_user->add_alert($alert);
 			} catch(GroupAlreadyExistsException $e) {
 				$alert = new UserAlert;
-				$alert->content = 'Group \'<a href="/groups/'.urlencode($name).'" class="alert-link">'.hesc($name).'</a>\' already exists.';
+				$alert->content = 'Group \'<a href="'.rrurl('/groups/'.urlencode($name)).'" class="alert-link">'.hesc($name).'</a>\' already exists.';
 				$alert->escaping = ESC_NONE;
 				$alert->class = 'danger';
 				$active_user->add_alert($alert);

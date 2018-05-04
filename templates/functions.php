@@ -76,16 +76,16 @@ function show_event($event) {
 	<tr>
 		<td>
 			<?php if(get_class($event) == 'ServerEvent') { ?>
-			<a href="/servers/<?php out($event->server->hostname, ESC_URL)?>" class="server"><?php out($event->server->hostname) ?></a>
+			<a href="<?php outurl('/servers/'.urlencode($event->server->hostname))?>" class="server"><?php out($event->server->hostname) ?></a>
 			<?php } elseif(get_class($event) == 'UserEvent') { ?>
-			<a href="/users/<?php out($event->user->uid, ESC_URL)?>" class="user"><?php out($event->user->uid) ?></a>
+			<a href="<?php outurl('/users/'.urlencode($event->user->uid))?>" class="user"><?php out($event->user->uid) ?></a>
 			<?php } elseif(get_class($event) == 'ServerAccountEvent') { ?>
-			<a href="/servers/<?php out($event->account->server->hostname, ESC_URL)?>/accounts/<?php out($event->account->name, ESC_URL)?>" class="serveraccount"><?php out($event->account->name.'@'.$event->account->server->hostname) ?></a>
+			<a href="<?php outurl('/servers/'.urlencode($event->account->server->hostname).'/accounts/'.urlencode($event->account->name))?>" class="serveraccount"><?php out($event->account->name.'@'.$event->account->server->hostname) ?></a>
 			<?php } elseif(get_class($event) == 'GroupEvent') { ?>
-			<a href="/groups/<?php out($event->group->name, ESC_URL)?>" class="group"><?php out($event->group->name) ?></a>
+			<a href="<?php outurl('/groups/'.urlencode($event->group->name))?>" class="group"><?php out($event->group->name) ?></a>
 			<?php } ?>
 		</td>
-		<td><a href="/users/<?php out($event->actor->uid, ESC_URL)?>" class="user"><?php out($event->actor->uid) ?></a></td>
+		<td><a href="<?php outurl('/users/'.urlencode($event->actor->uid))?>" class="user"><?php out($event->actor->uid) ?></a></td>
 		<td><?php out($details, ESC_NONE) ?></td>
 		<td class="nowrap"><?php out($event->date) ?></td>
 	</tr>
@@ -94,12 +94,12 @@ function show_event($event) {
 function show_event_participant($participant) {
 	list($type, $name) = explode(':', $participant, 2);
 	if($type == 'user') {
-		return '<a href="/users/'.urlencode($name).'" class="user">'.hesc($name).'</a>';
+		return '<a href="'.rrurl('/users/'.urlencode($name)).'" class="user">'.hesc($name).'</a>';
 	} elseif($type == 'account') {
 		list($account, $server) = explode('@', $name, 2);
-		return '<a href="/servers/'.urlencode($server).'/accounts/'.urlencode($account).'" class="serveraccount">'.hesc($name).'</a>';
+		return '<a href="'.rrurl('/servers/'.urlencode($server).'/accounts/'.urlencode($account)).'" class="serveraccount">'.hesc($name).'</a>';
 	} elseif($type == 'group') {
-		return '<a href="/groups/'.urlencode($name).'" class="group">'.hesc($name).'</a>';
+		return '<a href="'.rrurl('/groups/'.urlencode($name)).'" class="group">'.hesc($name).'</a>';
 	} else {
 		return hesc($participant);
 	}

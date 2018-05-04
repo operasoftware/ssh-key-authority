@@ -22,10 +22,10 @@ header("Content-Security-Policy: default-src 'self'");
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title><?php out($this->get('title'))?></title>
-<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css"/>
-<link rel="stylesheet" href="/style.css?<?php out(filemtime('public_html/style.css'))?>">
-<link rel="icon" href="/key.png">
-<script src="/header.js?<?php out(filemtime('public_html/header.js'))?>"></script>
+<link rel="stylesheet" href="<?php outurl('/bootstrap/css/bootstrap.min.css')?>">
+<link rel="stylesheet" href="<?php outurl('/style.css?'.filemtime('public_html/style.css'))?>">
+<link rel="icon" href="<?php outurl('/key.png')?>">
+<script src="<?php outurl('/header.js?'.filemtime('public_html/header.js'))?>"></script>
 <?php out($this->get('head'), ESC_NONE) ?>
 <div id="wrap">
 <a href="#content" class="sr-only">Skip to main content</a>
@@ -47,7 +47,7 @@ header("Content-Security-Policy: default-src 'self'");
 		<div class="navbar-collapse collapse">
 			<ul class="nav navbar-nav">
 				<?php foreach($this->get('menu_items') as $url => $name) { ?>
-				<li<?php if($url == $this->get('relative_request_url')) out(' class="active"', ESC_NONE); ?>><a href="<?php out($url)?>"><?php out($name)?></a></li>
+				<li<?php if($url == $this->get('relative_request_url')) out(' class="active"', ESC_NONE); ?>><a href="<?php outurl($url)?>"><?php out($name)?></a></li>
 				<?php } ?>
 			</ul>
 		</div>
@@ -70,6 +70,6 @@ header("Content-Security-Policy: default-src 'self'");
 		<?php } ?>
 	</div>
 </div>
-<script src="/jquery/jquery-3.2.1.min.js"></script>
-<script src="/bootstrap/js/bootstrap.min.js"></script>
-<script src="/extra.js?<?php out(filemtime('public_html/extra.js'))?>"></script>
+<script src="<?php outurl('/jquery/jquery-3.2.1.min.js')?>"></script>
+<script src="<?php outurl('/bootstrap/js/bootstrap.min.js')?>"></script>
+<script src="<?php outurl('/extra.js?'.filemtime('public_html/extra.js'))?>"></script>

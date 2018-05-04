@@ -18,7 +18,7 @@
 <h1><span class="glyphicon glyphicon-hdd" title="Server"></span> <?php out($this->get('server')->hostname)?><?php if($this->get('server')->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></h1>
 <?php if($this->get('admin') || $this->get('server_admin')) { ?>
 <?php if($this->get('server')->key_management == 'keys') { ?>
-<form method="post" action="<?php out($this->data->relative_request_url)?>">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<dl class="oneline">
 		<?php if(isset($this->get('inventory_config')['url']) && $this->get('server')->uuid) { ?>
@@ -37,7 +37,7 @@
 		>
 			<span></span>
 			<div class="spinner"></div>
-			<a href="/help" class="btn btn-info btn-xs hidden">Explain</a>
+			<a href="<?php outurl('/help')?>" class="btn btn-info btn-xs hidden">Explain</a>
 			<button name="sync" value="1" type="submit" class="btn btn-default btn-xs invisible">Sync now</button>
 		</dd>
 	</dl>
@@ -48,7 +48,7 @@
 	<ul>
 		<?php foreach($this->get('matching_servers_by_ip') as $matched_server) { ?>
 		<?php if($matched_server->hostname != $this->get('server')->hostname) { ?>
-		<li><a href="/servers/<?php out($matched_server->hostname, ESC_URL)?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
+		<li><a href="<?php outurl('/servers/'.urlencode($matched_server->hostname))?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
 		<?php } ?>
 		<?php } ?>
 	</ul>
@@ -60,7 +60,7 @@
 	<ul>
 		<?php foreach($this->get('matching_servers_by_host_key') as $matched_server) { ?>
 		<?php if($matched_server->hostname != $this->get('server')->hostname) { ?>
-		<li><a href="/servers/<?php out($matched_server->hostname, ESC_URL)?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
+		<li><a href="<?php outurl('/servers/'.urlencode($matched_server->hostname))?>" class="server alert-link"><?php out($matched_server->hostname)?></a></li>
 		<?php } ?>
 		<?php } ?>
 	</ul>
@@ -91,7 +91,7 @@
 		<?php if(count($this->get('server_accounts')) == 0) { ?>
 		<p>No accounts have been created yet.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered">
 				<thead>
@@ -118,9 +118,9 @@
 					?>
 					<tr>
 						<th rowspan="<?php out(max(1, count($access_list)))?>">
-							<a href="<?php out($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="serveraccount"><?php out($account->name) ?></a>
+							<a href="<?php outurl($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="serveraccount"><?php out($account->name) ?></a>
 							<?php if($account->pending_requests > 0) { ?>
-							<a href="<?php out($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>"><span class="badge" title="Pending requests"><?php out(number_format($account->pending_requests))?></span></a>
+							<a href="<?php outurl($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>"><span class="badge" title="Pending requests"><?php out(number_format($account->pending_requests))?></span></a>
 							<?php } ?>
 						</th>
 						<?php if($this->get('server')->key_management == 'keys') { ?>
@@ -133,7 +133,7 @@
 						</td>
 						<?php } ?>
 						<td rowspan="<?php out(max(1, count($access_list)))?>">
-							<a href="<?php out($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage account</a>
+							<a href="<?php outurl($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage account</a>
 							<?php if(!array_key_exists($account->name, $this->get('default_accounts'))) { ?>
 							<button type="submit" name="delete_account" value="<?php out($account->id) ?>" class="btn btn-default btn-xs" data-confirm="Are you sure you want to delete this account?"><span class="glyphicon glyphicon-trash"></span> Delete account</button>
 							<?php } ?>
@@ -151,19 +151,19 @@
 							switch(get_class($entity)) {
 							case 'User':
 						?>
-						<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a></td>
+						<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a></td>
 						<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 						<?php
 								break;
 							case 'ServerAccount':
 						?>
-						<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
+						<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
 						<td><em>Server-to-server access</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 								break;
 							case 'Group':
 						?>
-						<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a></td>
+						<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a></td>
 						<td><em>Group access</em><?php if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 						<?php
 								break;
@@ -177,7 +177,7 @@
 			</table>
 		</form>
 		<?php } ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Create<?php if($this->get('server')->authorization != 'manual') out(' non-LDAP'); ?> account</h3>
 			<div class="form-group">
@@ -192,7 +192,7 @@
 		<?php if(count($this->get('server_admins')) == 0) { ?>
 		<p class="alert alert-danger">This server does not have any administrators assigned.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -208,7 +208,7 @@
 					<?php foreach($this->get('server_admins') as $admin) { ?>
 						<?php if(strtolower(get_class($admin)) == "user"){?>
 							<tr>
-								<td><a href="/users/<?php out($admin->uid, ESC_URL)?>" class="user"><?php out($admin->uid) ?></a></td>
+								<td><a href="<?php outurl('/users/'.urlencode($admin->uid))?>" class="user"><?php out($admin->uid) ?></a></td>
 								<td><?php out($admin->name); if(!$admin->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 								<?php if($this->get('admin')) {?>
 								<td>
@@ -218,7 +218,7 @@
 							</tr>
 						<?php } elseif(strtolower(get_class($admin)) == "group"){ ?>
 							<tr>
-								<td><a href="/groups/<?php out($admin->name, ESC_URL)?>" class="group"><?php out($admin->name) ?></a></td>
+								<td><a href="<?php outurl('/groups/'.urlencode($admin->name))?>" class="group"><?php out($admin->name) ?></a></td>
 								<td><?php out($admin->name); if(!$admin->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 								<?php if($this->get('admin')) { ?>
 								<td>
@@ -232,7 +232,7 @@
 		</form>
 		<?php } ?>
 		<?php if($this->get('admin')) { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add administrator</h3>
 			<div class="form-group">
@@ -253,7 +253,7 @@
 	</div>
 	<div class="tab-pane fade" id="settings">
 		<h2 class="sr-only">Settings</h2>
-		<form id="server_settings" method="post" action="<?php out($this->data->relative_request_url)?>" class="form-horizontal">
+		<form id="server_settings" method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-horizontal">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<?php if($this->get('admin')) { ?>
 			<div class="form-group">
@@ -445,7 +445,7 @@
 	<?php if($this->get('admin')) { ?>
 	<div class="tab-pane fade" id="notes">
 		<h2 class="sr-only">Notes</h2>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<?php foreach($this->get('server_notes') as $note) { ?>
 			<div class="panel panel-default">
@@ -457,7 +457,7 @@
 			</div>
 			<?php } ?>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="note">Note</label>
@@ -470,7 +470,7 @@
 	</div>
 	<div class="tab-pane fade" id="contact">
 		<h2 class="sr-only">Contact</h2>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="anonymous">From</label>
@@ -530,7 +530,7 @@
 <p>You have access to the following accounts on this server: <?php out(implode(', ', $this->get('access_accounts'))) ?>
 </p>
 <?php } ?>
-<form method="post" action="<?php out($this->data->relative_request_url)?>">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<h4>Request access to account</h4>
 	<div class="row">
@@ -549,11 +549,11 @@
 		</div>
 		<div class="col-sm-7">
 			<button type="submit" name="request_access" value="user" class="btn btn-primary">Request access</button>
-			<a href="/help#getting_access" class="btn btn-info">Help</a>
+			<a href="<?php outurl('/help#getting_access')?>" class="btn btn-info">Help</a>
 		</div>
 	</div>
 </form>
-<form method="post" action="<?php out($this->data->relative_request_url)?>">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<h4>Request server-to-server access</h4>
 	<div class="row">
@@ -588,11 +588,11 @@
 		</div>
 		<div class="col-sm-3">
 			<button type="submit" name="request_access" value="server_account" class="btn btn-primary">Request access</button>
-			<a href="/help#getting_access" class="btn btn-info">Help</a>
+			<a href="<?php outurl('/help#getting_access')?>" class="btn btn-info">Help</a>
 		</div>
 	</div>
 </form>
-<form method="post" action="<?php out($this->data->relative_request_url)?>">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<h4>Request group access</h4>
 	<div class="row">
@@ -620,7 +620,7 @@
 		</div>
 		<div class="col-sm-3">
 			<button type="submit" name="request_access" value="group" class="btn btn-primary">Request access</button>
-			<a href="/help#getting_access" class="btn btn-info">Help</a>
+			<a href="<?php outurl('/help#getting_access')?>" class="btn btn-info">Help</a>
 		</div>
 	</div>
 </form>
@@ -648,9 +648,9 @@
 		?>
 		<tr>
 			<th rowspan="<?php out(max(1, count($access_list)))?>">
-				<a href="<?php out($this->data->relative_request_url.'/'.urlencode($account->name))?>" class="serveraccount"><?php out($account->name) ?></a>
+				<a href="<?php outurl($this->data->relative_request_url.'/'.urlencode($account->name))?>" class="serveraccount"><?php out($account->name) ?></a>
 				<?php if($account->pending_requests > 0) { ?>
-				<a href="<?php out($this->data->relative_request_url.'/'.urlencode($account->name))?>"><span class="badge" title="Pending requests"><?php out(number_format($account->pending_requests))?></span></a>
+				<a href="<?php outurl($this->data->relative_request_url.'/'.urlencode($account->name))?>"><span class="badge" title="Pending requests"><?php out(number_format($account->pending_requests))?></span></a>
 				<?php } ?>
 			</th>
 			<td rowspan="<?php out(max(1, count($access_list)))?>">
@@ -665,7 +665,7 @@
 				<?php } ?>
 			</td>
 			<td rowspan="<?php out(max(1, count($access_list)))?>">
-				<a href="<?php out($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage account</a>
+				<a href="<?php outurl($this->data->relative_request_url.'/accounts/'.urlencode($account->name))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Manage account</a>
 			</td>
 			<?php if(empty($access_list)) { ?>
 			<td colspan="3"><em>No-one</em></td>
@@ -679,19 +679,19 @@
 				switch(get_class($entity)) {
 				case 'User':
 			?>
-			<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a></td>
+			<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a></td>
 			<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 			<?php
 					break;
 				case 'ServerAccount':
 			?>
-			<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
+			<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
 			<td><em>Server-to-server access</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 			<?php
 					break;
 				case 'Group':
 			?>
-			<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a></td>
+			<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a></td>
 			<td><em>Group access</em></td>
 			<?php
 					break;

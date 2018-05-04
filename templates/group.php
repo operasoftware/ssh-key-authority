@@ -40,7 +40,7 @@ foreach($this->get('group_members') as $member) {
 		<?php if(count($this->get('group_members')) == 0) { ?>
 		<p>No members have been added to this group yet.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<?php if($this->get('group')->system) { ?>
 			<div class="alert alert-info">
@@ -64,25 +64,25 @@ foreach($this->get('group_members') as $member) {
 						switch(get_class($member)) {
 						case 'User':
 						?>
-						<td><a href="/users/<?php out($member->uid, ESC_URL)?>" class="user"><?php out($member->uid)?></a></td>
+						<td><a href="<?php outurl('/users/'.urlencode($member->uid))?>" class="user"><?php out($member->uid)?></a></td>
 						<td><?php out($member->name); if(!$member->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 						<?php
 							break;
 						case 'ServerAccount':
 						?>
-						<td><a href="/servers/<?php out($member->server->hostname, ESC_URL)?>/accounts/<?php out($member->name, ESC_URL)?>" class="serveraccount"><?php out($member->name.'@'.$member->server->hostname)?></a></td>
+						<td><a href="<?php outurl('/servers/'.urlencode($member->server->hostname).'/accounts/'.urlencode($member->name))?>" class="serveraccount"><?php out($member->name.'@'.$member->server->hostname)?></a></td>
 						<td><em>Server account</em><?php if($member->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 							break;
 						case 'Group':
 						?>
-						<td><a href="/groups/<?php out($member->name, ESC_URL)?>" class="group"><?php out($member->name)?></a></td>
+						<td><a href="<?php outurl('/groups/'.urlencode($member->name))?>" class="group"><?php out($member->name)?></a></td>
 						<td><em>Group</em></td>
 						<?php
 							break;
 						}
 						?>
-						<td>Added on <?php out($member->add_date) ?> by <?php out($member->added_by->uid) ?></td>
+						<td>Added on <?php out($member->add_date) ?> by <a href="<?php outurl('/users/'.urlencode($member->added_by->uid))?>" class="user"><?php out($member->added_by->uid) ?></a></td>
 						<?php if(!$this->get('group')->system) { ?>
 						<td>
 							<button type="submit" name="delete_member" value="<?php out($member->entity_id)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ban-circle"></span> Remove from group</button>
@@ -95,7 +95,7 @@ foreach($this->get('group_members') as $member) {
 		</form>
 		<?php } ?>
 		<?php if(!$this->get('group')->system) { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add user</h3>
 			<div class="row">
@@ -110,7 +110,7 @@ foreach($this->get('group_members') as $member) {
 				</div>
 			</div>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add server account</h3>
 			<div class="row">
@@ -140,7 +140,7 @@ foreach($this->get('group_members') as $member) {
 		<p>No access has been granted to this group's resources.</p>
 		<?php } ?>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -160,25 +160,25 @@ foreach($this->get('group_members') as $member) {
 						switch(get_class($entity)) {
 						case 'User':
 						?>
-						<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid)?></a></td>
+						<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid)?></a></td>
 						<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 						<?php
 							break;
 						case 'ServerAccount':
 						?>
-						<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname)?></a></td>
+						<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname)?></a></td>
 						<td><em>Server account</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 							break;
 						case 'Group':
 						?>
-						<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name)?></a></td>
+						<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name)?></a></td>
 						<td><em>Group</em></td>
 						<?php
 							break;
 						}
 						?>
-						<td>Added on <?php out($access->grant_date) ?> by <?php out($access->granted_by->uid) ?></td>
+						<td>Added on <?php out($access->grant_date) ?> by <a href="<?php outurl('/users/'.urlencode($access->granted_by->uid))?>" class="user"><?php out($access->granted_by->uid) ?></a></td>
 						<td>
 							<?php if(count($options) > 0) { ?>
 							<ul class="compact">
@@ -198,7 +198,7 @@ foreach($this->get('group_members') as $member) {
 							<?php } ?>
 						</td>
 						<td>
-							<a href="/groups/<?php out($this->get('group')->name, ESC_URL)?>/access_rules/<?php out($access->id, ESC_URL)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Configure access</a>
+							<a href="<?php outurl('/groups/'.urlencode($this->get('group')->name).'/access_rules/'.urlencode($access->id))?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Configure access</a>
 							<button type="submit" name="delete_access" value="<?php out($access->id)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ban-circle"></span> Remove access</button>
 						</td>
 						<?php } ?>
@@ -210,7 +210,7 @@ foreach($this->get('group_members') as $member) {
 		<?php if($membercounts['ServerAccount'] == 0 && $membercounts['Group'] == 0) { ?>
 		<p>This group does not contain any resources (server accounts or groups containing server accounts) to grant access to.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Grant user access</h3>
 			<div class="row">
@@ -225,7 +225,7 @@ foreach($this->get('group_members') as $member) {
 				</div>
 			</div>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Grant server account access</h3>
 			<div class="row">
@@ -246,7 +246,7 @@ foreach($this->get('group_members') as $member) {
 				</div>
 			</div>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Grant group access</h3>
 			<div class="row">
@@ -284,25 +284,25 @@ foreach($this->get('group_members') as $member) {
 					switch(get_class($entity)) {
 					case 'User':
 					?>
-					<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid)?></a></td>
+					<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid)?></a></td>
 					<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE)?></td>
 					<?php
 						break;
 					case 'ServerAccount':
 					?>
-					<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname)?></a></td>
+					<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname)?></a></td>
 					<td><em>Server account</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 					<?php
 						break;
 					case 'Group':
 					?>
-					<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name)?></a></td>
+					<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name)?></a></td>
 					<td><em>Group</em></td>
 					<?php
 						break;
 					}
 					?>
-					<td>Added on <?php out($access->grant_date) ?> by <?php out($access->granted_by->uid) ?></td>
+					<td>Added on <?php out($access->grant_date) ?> by <a href="<?php outurl('/users/'.urlencode($access->granted_by->uid))?>" class="user"><?php out($access->granted_by->uid) ?></a></td>
 					<?php } ?>
 				</tr>
 			</tbody>
@@ -314,7 +314,7 @@ foreach($this->get('group_members') as $member) {
 		<?php if(count($this->get('group_admins')) == 0) { ?>
 		<p class="alert alert-danger">This group does not have any administrators assigned.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -329,7 +329,7 @@ foreach($this->get('group_members') as $member) {
 				<tbody>
 					<?php foreach($this->get('group_admins') as $admin) { ?>
 					<tr>
-						<td><a href="/users/<?php out($admin->uid, ESC_URL)?>" class="user"><?php out($admin->uid) ?></a></td>
+						<td><a href="<?php outurl('/users/'.urlencode($admin->uid))?>" class="user"><?php out($admin->uid) ?></a></td>
 						<td><?php out($admin->name); if(!$admin->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php if($this->get('admin')) { ?>
 						<td>
@@ -343,7 +343,7 @@ foreach($this->get('group_members') as $member) {
 		</form>
 		<?php } ?>
 		<?php if($this->get('admin')) { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add administrator</h3>
 			<div class="form-group">
@@ -357,7 +357,7 @@ foreach($this->get('group_members') as $member) {
 	<?php if($this->get('admin')) { ?>
 	<div class="tab-pane fade" id="settings">
 		<h2 class="sr-only">Settings</h2>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-horizontal">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-horizontal">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">Name</label>

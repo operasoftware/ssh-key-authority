@@ -22,11 +22,11 @@ case 'sync warning':
 default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 }
 ?>
-<h1><span class="glyphicon glyphicon-log-in" title="Server account"></span> <?php out($this->get('account')->name)?>@<a href="/servers/<?php out($this->get('server')->hostname, ESC_URL)?>"><?php out($this->get('server')->hostname)?></a><?php if($this->get('account')->active == 0) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></h1>
+<h1><span class="glyphicon glyphicon-log-in" title="Server account"></span> <?php out($this->get('account')->name)?>@<a href="<?php outurl('/servers/'.urlencode($this->get('server')->hostname))?>"><?php out($this->get('server')->hostname)?></a><?php if($this->get('account')->active == 0) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></h1>
 <?php if($this->get('server')->key_management == 'keys') { ?>
 <?php if($this->get('account')->name != 'root' && $this->get('server')->sync_status == 'sync warning') { ?>
 <div class="alert alert-danger">
-	Non-root accounts are not being synchronized on this server yet.  See <a href="/help#sync_setup">the help pages</a> for details of what is required to activate syncing for all accounts.</p>
+	Non-root accounts are not being synchronized on this server yet.  See <a href="<?php outurl('/help#sync_setup')?>">the help pages</a> for details of what is required to activate syncing for all accounts.</p>
 </div>
 <?php } else { ?>
 <dl class="oneline">
@@ -65,7 +65,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 		<?php if(count($this->get('access')) == 0 && count($this->get('access_requests')) == 0) { ?>
 		<p>No-one has been granted access to this account.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-hover">
 				<thead>
@@ -86,7 +86,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						case 'User':
 							?>
 						<td>
-							<a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a>
+							<a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a>
 							<?php if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 						</td>
 							<?php
@@ -94,7 +94,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						case 'ServerAccount':
 							?>
 						<td>
-							<a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a>
+							<a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a>
 							<?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 						</td>
 							<?php
@@ -102,7 +102,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						case 'Group':
 							?>
 						<td>
-							<a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a>
+							<a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a>
 							<?php if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 						</td>
 							<?php
@@ -110,7 +110,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						}
 						?>
 						<td>
-							Access granted on <span class="date"><?php out($access->grant_date) ?> by <a href="/users/<?php out($access->granted_by->uid, ESC_URL)?>" class="user"><?php out($access->granted_by->uid) ?></a></span>
+							Access granted on <span class="date"><?php out($access->grant_date) ?> by <a href="<?php outurl('/users/'.urlencode($access->granted_by->uid))?>" class="user"><?php out($access->granted_by->uid) ?></a></span>
 						</td>
 						<td>
 							<?php if(count($options) > 0) { ?>
@@ -131,7 +131,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 							<?php } ?>
 						</td>
 						<td class="nowrap">
-							<a href="/servers/<?php out($this->get('server')->hostname, ESC_URL)?>/accounts/<?php out($this->get('account')->name, ESC_URL)?>/access_rules/<?php out($access->id, ESC_URL)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Configure access</a>
+							<a href="<?php outurl('/servers/'.urlencode($this->get('server')->hostname).'/accounts/'.urlencode($this->get('account')->name))?>/access_rules/<?php out($access->id, ESC_URL)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-cog"></span> Configure access</a>
 							<button type="submit" name="delete_access" value="<?php out($access->id)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ban-circle"></span> Remove access</button>
 						</td>
 					</tr>
@@ -144,7 +144,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						case 'User':
 							?>
 						<td>
-							<a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a>
+							<a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a>
 							<?php if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 						</td>
 							<?php
@@ -152,19 +152,19 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						case 'ServerAccount':
 							?>
 						<td>
-							<a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a>
+							<a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a>
 							<?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?>
 						</td>
 							<?php
 							break;
 						case 'Group':
 							?>
-						<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a></td>
+						<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a></td>
 							<?php
 							break;
 						}
 						?>
-						<td>Access requested on <span class="date"><?php out($access->request_date) ?></span> by <a href="/users/<?php out($access->requested_by->uid, ESC_URL)?>" class="user"><?php out($access->requested_by->uid) ?></a></td>
+						<td>Access requested on <span class="date"><?php out($access->request_date) ?></span> by <a href="<?php outurl('/users/'.urlencode($access->requested_by->uid))?>" class="user"><?php out($access->requested_by->uid) ?></a></td>
 						<td></td>
 						<td class="nowrap">
 							<button type="submit" name="approve_access" value="<?php out($access->id)?>" class="btn btn-success btn-xs"><span class="glyphicon glyphicon-ok"></span> Approve</button>
@@ -176,7 +176,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			</table>
 		</form>
 		<?php } ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h4>Add user to account</h4>
 			<div class="row">
@@ -196,7 +196,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 				</div>
 			</div>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h4>Add server-to-server access to account</h4>
 			<div class="row">
@@ -222,7 +222,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 				</div>
 			</div>
 		</form>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h4>Add group access to account</h4>
 			<div class="row">
@@ -250,7 +250,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			<?php
 			$grouplist = array();
 			foreach($this->get('group_membership') as $group) {
-				$grouplist[] = '<a href="/groups/'.urlencode($group->name).'" class="group">'.hesc($group->name).'</a>';
+				$grouplist[] = '<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="group">'.hesc($group->name).'</a>';
 			}
 			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership') == 1) ? '' : 's');
 			?>
@@ -261,7 +261,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			$group_access_rules = $group->list_access();
 			if(count($group_access_rules) > 0) {
 			?>
-		<h4><a href="/groups/<?php out($group->name, ESC_URL)?>" class="group"><?php out($group->name)?></a></h4>
+		<h4><a href="<?php outurl('/groups/'.urlencode($group->name))?>" class="group"><?php out($group->name)?></a></h4>
 		<table class="table table-bordered table-striped">
 			<thead>
 				<tr>
@@ -279,25 +279,25 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 					switch(get_class($entity)) {
 					case 'User':
 						?>
-					<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a></td>
+					<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a></td>
 					<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
 					case 'ServerAccount':
 						?>
-					<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
+					<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
 					<td><em>Server-to-server access</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
 					case 'Group':
 						?>
-					<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a></td>
+					<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a></td>
 					<td><em>Group access</em></td>
 						<?php
 						break;
 					}
 					?>
-					<td>Access granted on <?php out($access->grant_date) ?> by <?php out($access->granted_by->uid) ?></td>
+					<td>Access granted on <?php out($access->grant_date) ?> by <a href="<?php outurl('/users/'.urlencode($access->granted_by->uid))?>" class="user"><?php out($access->granted_by->uid) ?></a></td>
 					<td>
 						<?php if(count($options) > 0) { ?>
 						<ul class="compact">
@@ -332,7 +332,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 		<?php if(count($this->get('pubkeys')) == 0) { ?>
 		<p>This account does not have any public keys associated with it.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table">
 				<thead>
@@ -350,14 +350,14 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 					<tr>
 						<td><?php out($key->type) ?></td>
 						<td>
-							<a href="/pubkeys/<?php out($key->id, ESC_URL)?>">
+							<a href="<?php outurl('/pubkeys/'.urlencode($key->id))?>">
 								<span class="fingerprint_md5"><?php out($key->fingerprint_md5) ?></span>
 								<span class="fingerprint_sha256"><?php out($key->fingerprint_sha256) ?></span>
 							</a>
 						</td>
 						<td>
-							<?php if(count($key->list_signatures()) > 0) { ?><a href="/pubkeys/<?php out($key->id)?>#sig"><span class="glyphicon glyphicon-pencil" title="Signed key"></span></a><?php } ?>
-							<?php if(count($key->list_destination_rules()) > 0) { ?><a href="/pubkeys/<?php out($key->id)?>#dest"><span class="glyphicon glyphicon-pushpin" title="Destination-restricted"></span></a><?php } ?>
+							<?php if(count($key->list_signatures()) > 0) { ?><a href="<?php outurl('/pubkeys/'.urlencode($key->id).'#sig')?>"><span class="glyphicon glyphicon-pencil" title="Signed key"></span></a><?php } ?>
+							<?php if(count($key->list_destination_rules()) > 0) { ?><a href="<?php outurl('/pubkeys/'.urlencode($key->id).'#dest')?>"><span class="glyphicon glyphicon-pushpin" title="Destination-restricted"></span></a><?php } ?>
 						</td>
 						<td><?php out($key->keysize) ?></td>
 						<td><?php out($key->comment) ?></td>
@@ -368,7 +368,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			</table>
 		</form>
 		<?php } ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="add_public_key">Public key</label>
@@ -403,19 +403,19 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 					switch(get_class($entity)) {
 					case 'User':
 						?>
-					<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a></td>
+					<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a></td>
 					<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
 					case 'ServerAccount':
 						?>
-					<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
+					<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
 					<td><em>Server-to-server access</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
 					case 'Group':
 						?>
-					<td><a href="/groups/<?php out($entity->name, ESC_URL)?>" class="group"><?php out($entity->name) ?></a></td>
+					<td><a href="<?php outurl('/groups/'.urlencode($entity->name))?>" class="group"><?php out($entity->name) ?></a></td>
 					<td><em>Group access</em></td>
 						<?php
 						break;
@@ -435,18 +435,18 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			<?php
 			$grouplist = array();
 			foreach($this->get('group_membership') as $group) {
-				$grouplist[] = '<a href="/groups/'.urlencode($group->name).'" class="group">'.hesc($group->name).'</a>';
+				$grouplist[] = '<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="group">'.hesc($group->name).'</a>';
 			}
 			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership') == 1) ? '' : 's');
 			?>
-			<?php out($grouplisttext, ESC_NONE)?>, the following remote access rules automatically apply to it:
+			<?php out($grouplisttext, ESC_NONE)?>, the following outbound access rules automatically apply to it:
 		</p>
 		<?php
 		foreach($this->get('group_membership') as $group) {
 			$group_access_rules = $group->list_remote_access();
 			if(count($group_access_rules) > 0) {
 			?>
-		<h4><a href="/groups/<?php out($group->name, ESC_URL)?>" class="group"><?php out($group->name)?></a></h4>
+		<h4><a href="<?php outurl('/groups/'.urlencode($group->name))?>" class="group"><?php out($group->name)?></a></h4>
 		<table class="table table-bordered table-striped">
 			<thead>
 				<tr>
@@ -462,13 +462,13 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 					switch(get_class($entity)) {
 					case 'User':
 						?>
-					<td><a href="/users/<?php out($entity->uid, ESC_URL)?>" class="user"><?php out($entity->uid) ?></a></td>
+					<td><a href="<?php outurl('/users/'.urlencode($entity->uid))?>" class="user"><?php out($entity->uid) ?></a></td>
 					<td><?php out($entity->name); if(!$entity->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
 					case 'ServerAccount':
 						?>
-					<td><a href="/servers/<?php out($entity->server->hostname, ESC_URL)?>/accounts/<?php out($entity->name, ESC_URL)?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
+					<td><a href="<?php outurl('/servers/'.urlencode($entity->server->hostname).'/accounts/'.urlencode($entity->name))?>" class="serveraccount"><?php out($entity->name.'@'.$entity->server->hostname) ?></a></td>
 					<td><em>Server-to-server access</em><?php if($entity->server->key_management == 'decommissioned') out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php
 						break;
@@ -480,7 +480,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 						break;
 					}
 					?>
-					<td>Access granted on <?php out($access->grant_date) ?> by <?php out($access->granted_by->uid) ?></td>
+					<td>Access granted on <?php out($access->grant_date) ?> by <a href="<?php outurl('/users/'.urlencode($access->granted_by->uid))?>" class="user"><?php out($access->granted_by->uid) ?></a></td>
 				</tr>
 				<?php } ?>
 			</tbody>
@@ -494,7 +494,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 		<?php if(count($this->get('admins')) == 0) { ?>
 		<p>This account does not have any administrators assigned.</p>
 		<?php } else { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<table class="table table-bordered table-striped">
 				<thead>
@@ -509,7 +509,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 				<tbody>
 					<?php foreach($this->get('admins') as $admin) { ?>
 					<tr>
-						<td><a href="/users/<?php out($admin->uid, ESC_URL)?>" class="user"><?php out($admin->uid) ?></a></td>
+						<td><a href="<?php outurl('/users/'.urlencode($admin->uid))?>" class="user"><?php out($admin->uid) ?></a></td>
 						<td><?php out($admin->name); if(!$admin->active) out(' <span class="label label-default">Inactive</span>', ESC_NONE) ?></td>
 						<?php if($this->get('admin') || $this->get('server_admin')) { ?>
 						<td>
@@ -523,7 +523,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 		</form>
 		<?php } ?>
 		<?php if($this->get('admin') || $this->get('server_admin')) { ?>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>" class="form-inline">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-inline">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<h3>Add administrator</h3>
 			<div class="form-group">

@@ -29,7 +29,7 @@ switch(get_class($remote_entity)) {
 }
 ?>
 <h1><?php if($mode == 'create') out('Grant'); else out('Modify')?> access</h1>
-<form method="post" action="<?php out($this->data->relative_request_url)?>" id="access_options">
+<form method="post" action="<?php outurl($this->data->relative_request_url)?>" id="access_options">
 	<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 	<?php
 	switch(get_class($remote_entity)) {
@@ -57,12 +57,12 @@ switch(get_class($remote_entity)) {
 	<p>
 		You are <?php if($mode == 'create') out('granting'); else out('modifying the')?> SSH access to
 		<?php if(isset($server)) { ?>
-		<a href="/servers/<?php out($server->hostname, ESC_URL)?>/accounts/<?php out($account->name, ESC_URL)?>" class="serveraccount"><?php out($account->name.'@'.$server->hostname)?></a>
+		<a href="<?php outurl('/servers/'.urlencode($server->hostname).'/accounts/'.urlencode($account->name))?>" class="serveraccount"><?php out($account->name.'@'.$server->hostname)?></a>
 		<?php } elseif(isset($group)) { ?>
-		resources in the <a href="/groups/<?php out($group->name, ESC_URL)?>"><?php out($group->name)?></a> group
+		resources in the <a href="<?php outurl('/groups/'.urlencode($group->name))?>"><?php out($group->name)?></a> group
 		<?php } ?>
 		for
-		<a href="<?php out($re_url)?>" class="<?php out(strtolower(get_class($remote_entity)))?>"><?php out($remote_entity_name)?></a>.
+		<a href="<?php outurl($re_url)?>" class="<?php out(strtolower(get_class($remote_entity)))?>"><?php out($remote_entity_name)?></a>.
 	</p>
 	<?php if($mode == 'create') { ?>
 	<div class="form-group">
@@ -118,9 +118,9 @@ switch(get_class($remote_entity)) {
 		</div>
 		<div class="col-md-4">
 			<?php if(isset($server)) { ?>
-			<a href="/servers/<?php out($server->hostname, ESC_URL)?>/accounts/<?php out($account->name, ESC_URL)?>" class="btn btn-default btn-block">Cancel</a>
+			<a href="<?php outurl('/servers/'.urlencode($server->hostname).'/accounts/'.urlencode($account->name))?>" class="btn btn-default btn-block">Cancel</a>
 			<?php } elseif(isset($group)) { ?>
-			<a href="/groups/<?php out($group->name, ESC_URL)?>" class="btn btn-default btn-block">Cancel</a>
+			<a href="<?php outurl('/groups/'.urlencode($group->name))?>" class="btn btn-default btn-block">Cancel</a>
 			<?php } ?>
 		</div>
 	</div>

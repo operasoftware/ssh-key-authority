@@ -33,7 +33,7 @@ $security_config = $this->get('security_config');
 				<h3>Generating an SSH keypair</h3>
 				<?php keygen_help(null) ?>
 				<h3>Uploading a public key</h3>
-				<p>You can upload a new public key to your account from the <a href="/">home</a> page.</p>
+				<p>You can upload a new public key to your account from the <a href="<?php outurl('/')?>">home</a> page.</p>
 			</div>
 		</div>
 	</div>
@@ -70,7 +70,7 @@ $security_config = $this->get('security_config');
 		</div>
 		<div id="getting_access" class="panel-collapse collapse">
 			<div class="panel-body">
-				<p>Begin by browsing the <a href="/servers">server list</a>.  Click on the server that you need access to.</p>
+				<p>Begin by browsing the <a href="<?php outurl('/servers')?>">server list</a>.  Click on the server that you need access to.</p>
 				<p>You should see a "request access" form, in which you will need to enter the name of the account on the server that you are requesting access for.  For example, if you need access to the <i>root</i> account, then that is what you should enter in this field.</p>
 				<p>Once you have successfully requested access, the designated server administators will be sent a mail informing them of your request and you will need to wait for one of them to grant your access.</p>
 				<p class="alert alert-info">You will need to have a public key uploaded for your access to work.  See the <a data-toggle="collapse" data-parent="#help" href="#getting_started" class="alert-link">getting started guide</a>.</p>

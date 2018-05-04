@@ -114,9 +114,9 @@
 				?>
 				<tr>
 					<td>
-						<a href="/servers/<?php out($server->hostname, ESC_URL) ?>" class="server"><?php out($server->hostname) ?></a>
+						<a href="<?php outurl('/servers/'.urlencode($server->hostname)) ?>" class="server"><?php out($server->hostname) ?></a>
 						<?php if($server->pending_requests > 0 && $this->get('admin')) { ?>
-						<a href="/servers/<?php out($server->hostname, ESC_URL) ?>"><span class="badge" title="Pending requests"><?php out(number_format($server->pending_requests)) ?></span></a>
+						<a href="<?php outurl('/servers/'.urlencode($server->hostname)) ?>"><span class="badge" title="Pending requests"><?php out(number_format($server->pending_requests)) ?></span></a>
 						<?php } ?>
 					</td>
 					<td class="nowrap">
@@ -167,9 +167,9 @@
 	<div class="tab-pane fade" id="add">
 		<h2 class="sr-only">Add server</h2>
 		<div class="alert alert-info">
-			See <a href="/help#sync_setup" class="alert-link">the sync setup instructions</a> for how to set up the server for key synchronization.
+			See <a href="<?php outurl('/help#sync_setup')?>" class="alert-link">the sync setup instructions</a> for how to set up the server for key synchronization.
 		</div>
-		<form method="post" action="<?php out($this->data->relative_request_url)?>">
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>">
 			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
 			<div class="form-group">
 				<label for="hostname">Server hostname</label>
