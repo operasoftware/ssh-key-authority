@@ -15,6 +15,7 @@
 ## limitations under the License.
 ##
 */
+'use strict';
 
 // Handle 'navigate-back' links
 $(function() {

@@ -15,7 +15,7 @@
 ## limitations under the License.
 ##
 */
-
+'use strict';
 
 // Lightweight things to do before the page is displayed
 // This should not rely on any JQuery or other libraries
