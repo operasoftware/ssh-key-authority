@@ -21,13 +21,15 @@ class LDAP {
 	private $starttls;
 	private $bind_dn;
 	private $bind_password;
+	private $options;
 
-	public function __construct($host, $starttls, $bind_dn, $bind_password) {
+	public function __construct($host, $starttls, $bind_dn, $bind_password, $options) {
 		$this->conn = null;
 		$this->host = $host;
 		$this->starttls = $starttls;
 		$this->bind_dn = $bind_dn;
 		$this->bind_password = $bind_password;
+		$this->options = $options;
 	}
 
 	private function connect() {
@@ -36,8 +38,10 @@ class LDAP {
 		if($this->starttls) {
 			if(!ldap_start_tls($this->conn)) throw new LDAPConnectionFailureException('Could not initiate TLS connection to LDAP server');
 		}
+		foreach($this->options as $option => $value) {
+			ldap_set_option($this->conn, $option, $value);
+		}
 		if(!empty($this->bind_dn)) {
-			ldap_set_option($this->conn, LDAP_OPT_PROTOCOL_VERSION, 3);
 			if(!ldap_bind($this->conn, $this->bind_dn, $this->bind_password)) throw new LDAPConnectionFailureException('Could not bind to LDAP server');
 		}
 	}
