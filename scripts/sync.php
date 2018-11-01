@@ -410,7 +410,7 @@ function sync_server($id, $only_username = null, $preview = false) {
 			if(is_null($only_username) || $username == $only_username) {
 				try {
 					$remote_filename = "$keydir/$username";
-					$remote_entity = "ssh2.sftp://$sftp$remote_filename";
+					$remote_entity = "ssh2.sftp://" . intval($sftp) . $remote_filename;
 					$create = true;
 					if($keyfile['check']) {
 						$stream = ssh2_exec($connection, 'id '.escapeshellarg($username));
