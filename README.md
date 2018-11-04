@@ -34,6 +34,7 @@ All data on this demonstration server is reset nightly at 00:00 UTC.
 Requirements
 ------------
 
+* An LDAP directory service
 * Apache 2.2 or higher
 * PHP 5.6 or higher
 * PHP JSON extension
