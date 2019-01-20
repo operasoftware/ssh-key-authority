@@ -252,7 +252,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			foreach($this->get('group_membership') as $group) {
 				$grouplist[] = '<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="group">'.hesc($group->name).'</a>';
 			}
-			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership') == 1) ? '' : 's');
+			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership')) == 1 ? '' : 's');
 			?>
 			<?php out($grouplisttext, ESC_NONE)?>, the following access rules automatically apply to it:
 		</p>
@@ -437,7 +437,7 @@ default: $sync_class = 'warning'; $sync_message = 'Not synced'; break;
 			foreach($this->get('group_membership') as $group) {
 				$grouplist[] = '<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="group">'.hesc($group->name).'</a>';
 			}
-			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership') == 1) ? '' : 's');
+			$grouplisttext = english_list($grouplist).' group'.(count($this->get('group_membership')) == 1 ? '' : 's');
 			?>
 			<?php out($grouplisttext, ESC_NONE)?>, the following outbound access rules automatically apply to it:
 		</p>
