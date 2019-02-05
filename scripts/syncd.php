@@ -16,7 +16,7 @@
 ## limitations under the License.
 ##
 
-$options = getopt('', array('systemd', 'user'));
+$options = getopt('', array('systemd', 'user:'));
 
 /**
 * Handle process control signals
