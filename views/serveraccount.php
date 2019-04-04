@@ -146,6 +146,9 @@ if(isset($_POST['add_access']) && ($server_admin || $account_admin || $active_us
 		default:
 			$content->set('message', "The public key you submitted doesn't look valid.");
 		}
+	} catch(PublicKeyAlreadyKnownException $e) {
+		$content = new PageSection('key_upload_fail');
+		$content->set('message', "The public key you submitted is already in use. Please create a new one.");
 	}
 } elseif(isset($_POST['delete_public_key']) && ($server_admin || $account_admin || $active_user->admin)) {
 	foreach($pubkeys as $pubkey) {

@@ -20,6 +20,7 @@ chdir(__DIR__);
 require('../core.php');
 
 $users = $user_dir->list_users();
+$servers = $server_dir->list_servers();
 
 // Use 'keys-sync' user as the active user (create if it does not yet exist)
 try {
@@ -42,6 +43,11 @@ try {
 	$sysgrp->name = $config['ldap']['admin_group_cn'];
 	$sysgrp->system = 1;
 	$group_dir->add_group($sysgrp);
+}
+foreach($servers as $server) {
+	foreach($server->list_accounts() as $account) {
+		deprecate_public_keys($config, $account->list_public_keys(), $account->name . "@" . $server->hostname, $config['email']['admin_address'], $config['email']['admin_name'], $account);
+	}
 }
 foreach($users as $user) {
 	if($user->auth_realm == 'LDAP') {
@@ -94,6 +100,33 @@ foreach($users as $user) {
 		if(!($user->admin && $user->active) && $user->member_of($sysgrp)) {
 			$sysgrp->delete_member($user);
 		}
-		$user->update();
+	}
+	deprecate_public_keys($config, $user->list_public_keys(), $user->uid, $user->email, $user->name, $user);
+	$user->update();
+}
+
+function deprecate_public_keys($config, $public_keys, $entity_identifier, $recipient_mail, $recipient_name, $entity) {
+	if($config['general']['key_expiration_enabled'] == 1) {
+		foreach($public_keys as $public_key) {
+			$date = $public_key->upload_date;
+			$expiration_days = $config['general']['key_expiration_days'];
+			$expiration_date = strtotime($date . ' + ' . $expiration_days . ' days');
+			$expiration_time_in_days = round(($expiration_date - time()) / (60 * 60 * 24));
+				
+			if($expiration_time_in_days == 21 || $expiration_time_in_days == 14 || $expiration_time_in_days <= 7) {
+				$email = new Email;
+				$email->add_reply_to($config['email']['admin_address'], $config['email']['admin_name']);
+				$email->add_recipient($recipient_mail, $recipient_name);
+				if($expiration_time_in_days <= 0) {
+					$email->subject = $entity_identifier . ": Public key removed.";
+					$email->body = "Public key expired and was removed from the system.";
+					$entity->delete_public_key($public_key);
+				} else {
+					$email->subject = $entity_identifier . ": Public key expires in " . $expiration_time_in_days . " days";
+					$email->body = "Public key will expire soon. Expired keys are removed immediately and will not be usable anymore.";
+				}
+				$email->send();
+			}
+		}
 	}
 }

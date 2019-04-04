@@ -66,6 +66,10 @@ class PageSection {
 			return null;
 		}
 	}
+	public function config() {
+		global $config;
+		return $config;
+	}
 	public function generate() {
 		ob_start();
 		$data = $this->data;

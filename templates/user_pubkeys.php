@@ -27,6 +27,20 @@
 		<dd><?php out($pubkey->fingerprint_md5)?></dd>
 		<dt>Fingerprint (SHA256)</dt>
 		<dd><?php out($pubkey->fingerprint_sha256)?></dd>
+		<dt>Upload Date</dt>
+		<dd><?php out($pubkey->upload_date) ?></dd>
+		<?php if($this->config()['general']['key_expiration_enabled'] == 1) { ?>
+		<dt>Expiration Date</dt>
+		<dd>
+		<?php 
+		$date = $pubkey->upload_date;
+		$expiration_days = $this->config()['general']['key_expiration_days'];
+		$expiration_date = strtotime($date . ' + ' . $expiration_days . ' days');
+		$expiration_time_in_days = round(($expiration_date - time()) / (60 * 60 * 24));
+		out(date('Y-m-d H:i:s', $expiration_date) . ' (' . $expiration_time_in_days . ' days left)');
+		?>
+		</dd>
+		<?php } ?>
 	</dl>
 </div>
 <?php } ?>

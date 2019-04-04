@@ -33,6 +33,9 @@ if(isset($_POST['add_public_key'])) {
 		default:
 			$content->set('message', "The public key you submitted doesn't look valid.");
 		}
+	} catch(PublicKeyAlreadyKnownException $e) {
+		$content = new PageSection('key_upload_fail');
+		$content->set('message', "The public key you submitted is already in use. Please create a new one.");
 	}
 } elseif(isset($_POST['delete_public_key'])) {
 	foreach($public_keys as $public_key) {

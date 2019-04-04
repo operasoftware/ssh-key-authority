@@ -131,23 +131,32 @@ abstract class Entity extends Record {
 		$key_fingerprint_sha256 = $key->fingerprint_sha256;
 		$key_randomart_md5 = $key->randomart_md5;
 		$key_randomart_sha256 = $key->randomart_sha256;
-		$stmt = $this->database->prepare("
-			INSERT INTO public_key SET
-			entity_id = ?,
-			type = ?,
-			keydata = ?,
-			comment = ?,
-			keysize = ?,
-			fingerprint_md5 = ?,
-			fingerprint_sha256 = ?,
-			randomart_md5 = ?,
-			randomart_sha256 = ?
-		");
-		$stmt->bind_param('dsssdssss', $this->entity_id, $key_type, $key_keydata, $key_comment, $key_size, $key_fingerprint_md5, $key_fingerprint_sha256, $key_randomart_md5, $key_randomart_sha256);
-		$stmt->execute();
-		$key->id = $stmt->insert_id;
-		$stmt->close();
-		$this->sync_remote_access();
+		try {
+			$stmt = $this->database->prepare("
+				INSERT INTO public_key SET
+				entity_id = ?,
+				type = ?,
+				keydata = ?,
+				comment = ?,
+				keysize = ?,
+				fingerprint_md5 = ?,
+				fingerprint_sha256 = ?,
+				randomart_md5 = ?,
+				randomart_sha256 = ?
+			");
+			$stmt->bind_param('dsssdssss', $this->entity_id, $key_type, $key_keydata, $key_comment, $key_size, $key_fingerprint_md5, $key_fingerprint_sha256, $key_randomart_md5, $key_randomart_sha256);
+			$stmt->execute();
+			$key->id = $stmt->insert_id;
+			$stmt->close();
+			$this->sync_remote_access();
+		} catch(mysqli_sql_exception $e) {
+			if($e->getCode() == 1062) {
+				// Duplicate entry
+				throw new PublicKeyAlreadyKnownException("public key already known");
+			} else {
+				throw $e;
+			}
+		}
 	}
 
 	/**
@@ -156,7 +165,7 @@ abstract class Entity extends Record {
 	*/
 	public function delete_public_key(PublicKey $key) {
 		if(is_null($this->entity_id)) throw new BadMethodCallException('Entity must be in directory before public keys can be deleted');
-		$stmt = $this->database->prepare("DELETE FROM public_key WHERE entity_id = ? AND id = ?");
+		$stmt = $this->database->prepare("UPDATE public_key SET active = false WHERE entity_id = ? AND id = ?");
 		$stmt->bind_param('dd', $this->entity_id, $key->id);
 		$stmt->execute();
 		$stmt->close();
@@ -171,7 +180,7 @@ abstract class Entity extends Record {
 	*/
 	public function get_public_key_by_id($id) {
 		if(is_null($this->entity_id)) throw new BadMethodCallException('Entity must be in directory before public keys can be listed');
-		$stmt = $this->database->prepare("SELECT * FROM public_key WHERE entity_id = ? AND id = ?");
+		$stmt = $this->database->prepare("SELECT * FROM public_key WHERE entity_id = ? AND id = ? AND active = true");
 		$stmt->bind_param('dd', $this->entity_id, $id);
 		$stmt->execute();
 		$result = $stmt->get_result();
@@ -198,7 +207,7 @@ abstract class Entity extends Record {
 			SELECT public_key.*, COUNT(public_key_dest_rule.id) AS dest_rule_count
 			FROM public_key
 			LEFT JOIN public_key_dest_rule ON public_key_dest_rule.public_key_id = public_key.id
-			WHERE entity_id = ?
+			WHERE entity_id = ? AND active = true
 			GROUP BY public_key.id
 		");
 		$stmt->bind_param('d', $this->entity_id);
@@ -414,3 +423,4 @@ abstract class Entity extends Record {
 		}
 	}
 }
+class PublicKeyAlreadyKnownException extends Exception {}

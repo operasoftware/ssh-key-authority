@@ -30,7 +30,7 @@ class PublicKeyDirectory extends DBDirectory {
 			SELECT public_key.*, entity.type AS entity_type
 			FROM public_key
 			INNER JOIN entity ON entity.id = public_key.entity_id
-			WHERE public_key.id = ?
+			WHERE public_key.id = ? AND active = true
 		");
 		$stmt->bind_param('d', $id);
 		$stmt->execute();
@@ -60,6 +60,7 @@ class PublicKeyDirectory extends DBDirectory {
 		$fields = array("public_key.*, entity.type AS entity_type");
 		$joins = array();
 		$where = array();
+		$where[] = "public_key.active = true";
 		foreach($filter as $field => $value) {
 			if($value) {
 				switch($field) {

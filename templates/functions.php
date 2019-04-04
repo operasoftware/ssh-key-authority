@@ -178,6 +178,7 @@ function pubkey_json($pubkey, $include_keydata = true, $include_owner = true) {
 	$json->fingerprint = $pubkey->fingerprint_md5;
 	$json->fingerprint_md5 = $pubkey->fingerprint_md5;
 	$json->fingerprint_sha256 = $pubkey->fingerprint_sha256;
+	$json->upload_date = $pubkey->upload_date;
 	if($include_owner) {
 		$json->owner = new StdClass;
 		$json->owner->type = get_class($pubkey->owner);

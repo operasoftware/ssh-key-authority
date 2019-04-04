@@ -63,6 +63,7 @@ class PublicKey extends Record {
 		$this->fingerprint_sha256 = rtrim(base64_encode($hash_sha256), '=');
 		$this->randomart_md5 = $this->generate_randomart($hash_md5, "{$algorithm} {$this->keysize}", 'MD5');
 		$this->randomart_sha256 = $this->generate_randomart(bin2hex($hash_sha256), "{$algorithm} {$this->keysize}", 'SHA256');
+		$this->upload_date = date('Y-m-d H:i:s', time());
 
 		if($this->keysize < $minbits && !$force) {
 			throw new InvalidArgumentException("Insufficient bits in public key");

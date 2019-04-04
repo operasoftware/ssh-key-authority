@@ -58,6 +58,20 @@ $owner = $this->get('pubkey')->owner;
 			<dd><?php out($this->get('pubkey')->fingerprint_sha256)?></dd>
 			<dt>Randomart (SHA256)</dt>
 			<dd><pre class="ascii-art"><?php out($this->get('pubkey')->randomart_sha256)?></pre></dd>
+			<dt>Upload Date</dt>
+			<dd><?php out($this->get('pubkey')->upload_date) ?></dd>
+			<?php if($this->config()['general']['key_expiration_enabled'] == 1) { ?>
+			<dt>Expiration Date</dt>
+			<dd>
+			<?php 
+			$date = $this->get('pubkey')->upload_date;
+			$expiration_days = $this->config()['general']['key_expiration_days'];
+			$expiration_date = strtotime($date . ' + ' . $expiration_days . ' days');
+			$expiration_time_in_days = round(($expiration_date - time()) / (60 * 60 * 24));
+			out(date('Y-m-d H:i:s', $expiration_date) . ' (' . $expiration_time_in_days . ' days left)');
+			?>
+			</dd>
+			<?php } ?>
 		</dl>
 	</div>
 	<?php if($this->get('user_is_owner') || $this->get('admin')) { ?>
