@@ -15,7 +15,7 @@
 ## limitations under the License.
 ##
 
-if(isset($_POST['add_server'])) {
+if(isset($_POST['add_server']) && ($active_user->admin)) {
 	$hostname = trim($_POST['hostname']);
 	if(!preg_match('|.*\..*\..*|', $hostname)) {
 		$content = new PageSection('invalid_hostname');

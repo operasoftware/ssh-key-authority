@@ -15,7 +15,7 @@
 ## limitations under the License.
 ##
 
-if(isset($_POST['add_group'])) {
+if(isset($_POST['add_group']) && ($active_user->admin)) {
 	$name = trim($_POST['name']);
 	if(preg_match('|/|', $name)) {
 		$content = new PageSection('invalid_group_name');
