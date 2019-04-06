@@ -1,0 +1,71 @@
+version: '2.2'
+services:
+  test:
+    image: alpine:3.8
+    command: /bin/ash -c "(id keys-sync || adduser -h /var/local/keys-sync -S -D -s /bin/sh keys-sync) && chmod 711 /var/local/keys-sync && cp /key /var/local/keys-sync/keys-sync && chown keys-sync:nogroup /var/local/keys-sync/keys-sync && chmod 644 /var/local/keys-sync/keys-sync && apk add openssh && ssh-keygen -A && sed -i -e '/#StrictModes/ s/.*/StrictModes yes/' /etc/ssh/sshd_config && sed -i -e '/AuthorizedKeysFile/ s/.*/AuthorizedKeysFile \/var\/local\/keys-sync\/%u/' /etc/ssh/sshd_config && passwd keys-sync -d test && /usr/sbin/sshd -D"
+    restart: always
+    expose:
+      - "22"
+    depends_on:
+      - ska-php
+    volumes:
+      - ../shared/config-ldap/keys-sync.pub:/key:ro
+    networks:
+      net:
+        aliases:
+         - test.example.com
+
+  mail:
+    image: mwader/postfix-relay
+    restart: always
+    environment:
+    - POSTFIX_myhostname=ska.example.de
+    - POSTFIX_mynetworks=0.0.0.0/0
+    expose:
+      - "25"
+    networks:
+      - net
+
+  ska-db:
+    image: mariadb
+    restart: always
+    environment:
+    - MYSQL_ROOT_PASSWORD=root-password
+    - MYSQL_DATABASE=ska-db
+    - MYSQL_USER=ska-user
+    - MYSQL_PASSWORD=password
+    volumes:
+      - ./db:/var/lib/mysql:rw
+    networks:
+      - net
+
+  ska-php:
+    image: alpine:3.8
+    command: /bin/ash -c "mkdir -p /var/log/keys /run/php/ && (id -u keys-sync 2> /dev/null || adduser --system --disabled-password keys-sync) && chown keys-sync:nogroup /ska/config/keys-sync && apk add php php-fpm ssmtp openssh php7-json php7-ldap php7-mbstring php7-mysqli php7-ssh2 php7-posix php7-pcntl && sed -i -e '/listen =/ s/= .*/= 0.0.0.0:9000/' /etc/php7/php-fpm.d/www.conf && crond && /ska/scripts/syncd.php --user keys-sync && php-fpm7 -F"
+    restart: always
+    depends_on:
+      - ska-db
+      - mail
+    volumes:
+      - ../../:/ska/:ro
+      - ../shared/config-ldap/:/ska/config/:rw
+      - ../shared/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro
+      - ../shared/cron/:/var/spool/cron/crontabs/:rw
+    networks:
+      - net
+
+  ska:
+    image: httpd:alpine
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - ska-php
+    volumes:
+      - ../../:/ska/:ro
+      - ./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
+    networks:
+      - net
+      
+networks:
+  net:
