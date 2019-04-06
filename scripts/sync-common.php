@@ -32,6 +32,9 @@ class SyncProcess {
 	* @param Request $request object that triggered this sync
 	*/
 	public function __construct($command, $args, $request = null) {
+		global $config;
+		$timeout_util = $config['general']['timeout_util'];
+
 		$this->request = $request;
 		$this->output = '';
 		$descriptorspec = array(
@@ -40,7 +43,13 @@ class SyncProcess {
 			2 => array("pipe", "w"),  // stderr
 			3 => array("pipe", "w")   //
 		);
-		$commandline = '/usr/bin/timeout 60s '.$command.' '.implode(' ', array_map('escapeshellarg', $args));
+		switch ($timeout_util) {
+			case "BusyBox":
+				$commandline = '/usr/bin/timeout -t 60 '.$command.' '.implode(' ', array_map('escapeshellarg', $args));
+				break;
+			default:
+				$commandline = '/usr/bin/timeout 60s '.$command.' '.implode(' ', array_map('escapeshellarg', $args));
+		}
 
 		$this->handle = proc_open($commandline, $descriptorspec, $this->pipes);
 		stream_set_blocking($this->pipes[1], 0);
