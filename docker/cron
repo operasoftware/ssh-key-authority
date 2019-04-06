@@ -1,0 +1,2 @@
+0 1 * * * /ska/scripts/ldap_update.php
+*/1 * * * * /bin/ash -c "PID=$(cat /var/run/keys-sync.pid) && [ -n ${PID} -a -d /proc/${PID} ] || /ska/scripts/syncd.php --user keys-sync"

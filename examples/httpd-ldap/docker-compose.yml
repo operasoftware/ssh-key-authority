@@ -40,17 +40,16 @@ services:
       - net
 
   ska-php:
-    image: alpine:3.8
-    command: /bin/ash -c "mkdir -p /var/log/keys /run/php/ && (id -u keys-sync 2> /dev/null || adduser --system --disabled-password keys-sync) && chown keys-sync:nogroup /ska/config/keys-sync && apk add php php-fpm ssmtp openssh php7-json php7-ldap php7-mbstring php7-mysqli php7-ssh2 php7-posix php7-pcntl && sed -i -e '/listen =/ s/= .*/= 0.0.0.0:9000/' /etc/php7/php-fpm.d/www.conf && crond && /ska/scripts/syncd.php --user keys-sync && php-fpm7 -F"
+    build:
+      context: ../../docker
     restart: always
     depends_on:
       - ska-db
       - mail
     volumes:
-      - ../../:/ska/:ro
       - ../shared/config-ldap/:/ska/config/:rw
       - ../shared/ssmtp.conf:/etc/ssmtp/ssmtp.conf:ro
-      - ../shared/cron/:/var/spool/cron/crontabs/:rw
+      - ./public_html:/public_html:rw
     networks:
       - net
 
@@ -62,7 +61,7 @@ services:
     depends_on:
       - ska-php
     volumes:
-      - ../../:/ska/:ro
+      - ./public_html:/ska/public_html:ro
       - ./httpd.conf:/usr/local/apache2/conf/httpd.conf:ro
     networks:
       - net
