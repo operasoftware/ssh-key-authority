@@ -69,6 +69,7 @@ try {
 	$active_user->uid = 'keys-sync';
 	$active_user->name = 'Synchronization script';
 	$active_user->email = '';
+	$active_user->auth_realm = 'local';
 	$active_user->active = 1;
 	$active_user->admin = 1;
 	$active_user->developer = 0;

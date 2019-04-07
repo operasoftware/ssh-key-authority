@@ -82,7 +82,7 @@ foreach($this->get('group_members') as $member) {
 							break;
 						}
 						?>
-						<td>Added on <?php out($member->add_date) ?> by <a href="<?php outurl('/users/'.urlencode($member->added_by->uid))?>" class="user"><?php out($member->added_by->uid) ?></a></td>
+						<td>Added on <?php out($member->add_date) ?> by <?php if(is_null($member->added_by->uid)) { ?>removed<?php } else { ?><a href="<?php outurl('/users/'.urlencode($member->added_by->uid))?>" class="user"><?php out($member->added_by->uid) ?></a><?php } ?></td>
 						<?php if(!$this->get('group')->system) { ?>
 						<td>
 							<button type="submit" name="delete_member" value="<?php out($member->entity_id)?>" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-ban-circle"></span> Remove from group</button>

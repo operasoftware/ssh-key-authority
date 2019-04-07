@@ -85,7 +85,11 @@ function show_event($event) {
 			<a href="<?php outurl('/groups/'.urlencode($event->group->name))?>" class="group"><?php out($event->group->name) ?></a>
 			<?php } ?>
 		</td>
+		<?php if(is_null($event->actor->uid)) { ?>
+		<td>removed</td>
+		<?php } else { ?>
 		<td><a href="<?php outurl('/users/'.urlencode($event->actor->uid))?>" class="user"><?php out($event->actor->uid) ?></a></td>
+		<?php } ?>
 		<td><?php out($details, ESC_NONE) ?></td>
 		<td class="nowrap"><?php out($event->date) ?></td>
 	</tr>

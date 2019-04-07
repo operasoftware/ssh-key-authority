@@ -67,6 +67,23 @@ class User extends Entity {
 	}
 
 	/**
+	* Delete the given user.
+	*/
+	public function delete() {
+		if(is_null($this->entity_id)) throw new BadMethodCallException('User must be in directory before it can be removed');
+		$stmt = $this->database->prepare("DELETE FROM entity WHERE id = ?");
+		$stmt->bind_param('d', $this->entity_id);
+		$stmt->execute();
+		$stmt->close();
+		$stmt = $this->database->prepare("DELETE FROM user WHERE entity_id = ?");
+		$stmt->bind_param('d', $this->entity_id);
+		$stmt->execute();
+		$stmt->close();
+		
+		$this->sync_remote_access();
+	}
+
+	/**
 	* Magic getter method - if superior field requested, return User object of user's superior
 	* @param string $field to retrieve
 	* @return mixed data stored in field

@@ -451,7 +451,7 @@
 			<div class="panel panel-default">
 				<div class="panel-body pre-formatted"><?php out($this->get('output_formatter')->comment_format($note->note), ESC_NONE)?></div>
 				<div class="panel-footer">
-					Added <?php out($note->date)?> by <?php out($note->user->name)?>
+					Added <?php out($note->date)?> by <?php if(is_null($note->user->uid)) { ?>removed<?php } else { ?><a href="<?php outurl('/users/'.urlencode($note->user->uid))?>" class="user"><?php out($note->user->uid) ?></a><?php } ?>
 					<button name="delete_note" value="<?php out($note->id)?>" class="pull-right btn btn-default btn-xs"><span class="glyphicon glyphicon-trash"></span> Delete</button>
 				</div>
 			</div>

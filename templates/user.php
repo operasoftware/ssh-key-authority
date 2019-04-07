@@ -217,6 +217,17 @@
 		</form>
 		<?php } ?>
 		<?php } ?>
+		<?php if($this->get('user')->auth_realm == 'local' && $this->get('admin')) { ?>
+		<h3>User managment</h3>
+		<form method="post" action="<?php outurl($this->data->relative_request_url)?>" class="form-horizontal">
+			<?php out($this->get('active_user')->get_csrf_field(), ESC_NONE) ?>
+			<div class="form-group">
+				<div class="col-sm-2">
+					<button type="submit" name="delete_user" value="1" class="btn btn-primary">Delete user</button>
+				</div>
+			</div>
+		</form>
+		<?php } ?>
 	</div>
 	<?php if($this->get('user')->auth_realm == 'LDAP') { ?>
 	<div class="tab-pane fade" id="settings">
