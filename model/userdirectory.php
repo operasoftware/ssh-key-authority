@@ -45,13 +45,22 @@ class UserDirectory extends DBDirectory {
 		$user_active = $user->active;
 		$user_admin = $user->admin;
 		$user_email = $user->email;
-		$stmt = $this->database->prepare("INSERT INTO entity SET type = 'user'");
-		$stmt->execute();
-		$user->entity_id = $stmt->insert_id;
-		$stmt = $this->database->prepare("INSERT INTO user SET entity_id = ?, uid = ?, name = ?, email = ?, active = ?, admin = ?");
-		$stmt->bind_param('dsssdd', $user->entity_id, $user_id, $user_name, $user_email, $user_active, $user_admin);
-		$stmt->execute();
-		$stmt->close();
+		try {
+			$stmt = $this->database->prepare("INSERT INTO entity SET type = 'user'");
+			$stmt->execute();
+			$user->entity_id = $stmt->insert_id;
+			$stmt = $this->database->prepare("INSERT INTO user SET entity_id = ?, uid = ?, name = ?, email = ?, active = ?, admin = ?, auth_realm = ?");
+			$stmt->bind_param('dsssdds', $user->entity_id, $user_id, $user_name, $user_email, $user_active, $user_admin, $user->auth_realm);
+			$stmt->execute();
+			$stmt->close();
+		} catch(mysqli_sql_exception $e) {
+			if($e->getCode() == 1062) {
+				// Duplicate entry
+				throw new UserAlreadyExistsException("User {$user->uid} already exists");
+			} else {
+				throw $e;
+			}
+		}		
 	}
 
 	/**
@@ -82,6 +91,8 @@ class UserDirectory extends DBDirectory {
 	* @throws UserNotFoundException if no user with that uid exists
 	*/
 	public function get_user_by_uid($uid) {
+		global $config;
+		$ldap_enabled = $config['ldap']['enabled'];
 		if(isset($this->cache_uid[$uid])) {
 			return $this->cache_uid[$uid];
 		}
@@ -93,11 +104,16 @@ class UserDirectory extends DBDirectory {
 			$user = new User($row['entity_id'], $row);
 			$this->cache_uid[$uid] = $user;
 		} else {
-			$user = new User;
-			$user->uid = $uid;
-			$this->cache_uid[$uid] = $user;
-			$user->get_details_from_ldap();
-			$this->add_user($user);
+			if ($ldap_enabled == 1) {
+				$user = new User;
+				$user->uid = $uid;
+				$this->cache_uid[$uid] = $user;
+				$user->auth_realm = 'LDAP';
+				$user->get_details_from_ldap();
+				$this->add_user($user);
+			} else {
+				throw new UserNotFoundException('User does not exist.');
+			}
 		}
 		$stmt->close();
 		return $user;
@@ -148,3 +164,4 @@ class UserDirectory extends DBDirectory {
 }
 
 class UserNotFoundException extends Exception {}
+class UserAlreadyExistsException extends Exception {}

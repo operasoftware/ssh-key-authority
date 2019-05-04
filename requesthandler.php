@@ -20,18 +20,23 @@ require('core.php');
 ob_start();
 set_exception_handler('exception_handler');
 
-if(isset($_SERVER['PHP_AUTH_USER'])) {
-	$active_user = $user_dir->get_user_by_uid($_SERVER['PHP_AUTH_USER']);
-} else {
-	throw new Exception("Not logged in.");
-}
-
 // Work out where we are on the server
 $base_path = dirname(__FILE__);
 $base_url = dirname($_SERVER['SCRIPT_NAME']);
 $request_url = $_SERVER['REQUEST_URI'];
 $relative_request_url = preg_replace('/^'.preg_quote($base_url, '/').'/', '/', $request_url);
 $absolute_request_url = 'http'.(isset($_SERVER['HTTPS']) ? 's' : '').'://'.$_SERVER['HTTP_HOST'].$request_url;
+
+if(isset($_SERVER['PHP_AUTH_USER'])) {
+	try {
+		$active_user = $user_dir->get_user_by_uid($_SERVER['PHP_AUTH_USER']);
+	} catch(UserNotFoundException $ex) {
+		require('views/error403.php');
+		die;
+	}
+} else {
+	throw new Exception("Not logged in.");
+}
 
 if(empty($config['web']['enabled'])) {
 	require('views/error503.php');
@@ -40,6 +45,7 @@ if(empty($config['web']['enabled'])) {
 
 if(!$active_user->active) {
 	require('views/error403.php');
+	die;
 }
 
 if(!empty($_POST)) {
@@ -62,10 +68,11 @@ $router->handle_request($relative_request_url);
 if(isset($router->view)) {
 	$view = path_join($base_path, 'views', $router->view.'.php');
 	if(file_exists($view)) {
-		if($active_user->auth_realm == 'LDAP' || $router->public) {
+		if($active_user->auth_realm == 'LDAP' || $active_user->auth_realm == 'local' || $router->public) {
 			require($view);
 		} else {
 			require('views/error403.php');
+			die;
 		}
 	} else {
 		throw new Exception("View file $view missing.");

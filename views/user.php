@@ -48,9 +48,16 @@ if(isset($_POST['reassign_servers']) && is_array($_POST['servers']) && $active_u
 	}
 } elseif(isset($_POST['edit_user']) && $active_user->admin) {
 	$user->force_disable = $_POST['force_disable'];
-	$user->get_details_from_ldap();
+	if($active_user->auth_realm == 'LDAP' ) {
+		$user->get_details_from_ldap();
+	}
 	$user->update();
 	redirect('#settings');
+} elseif(isset($_POST['delete_user']) && $active_user->admin) {
+	if($user->auth_realm == 'local' && $user->uid != 'keys-sync' ) {
+		$user->delete();
+	}
+	redirect('/users');
 } else {
 	$content = new PageSection('user');
 	$content->set('user', $user);

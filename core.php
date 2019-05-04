@@ -35,10 +35,12 @@ require('routes.php');
 require('ldap.php');
 require('email.php');
 
-$ldap_options = array();
-$ldap_options[LDAP_OPT_PROTOCOL_VERSION] = 3;
-$ldap_options[LDAP_OPT_REFERRALS] = !empty($config['ldap']['follow_referrals']);
-$ldap = new LDAP($config['ldap']['host'], $config['ldap']['starttls'], $config['ldap']['bind_dn'], $config['ldap']['bind_password'], $ldap_options);
+if ($config['ldap']['enabled'] == 1) {
+	$ldap_options = array();
+	$ldap_options[LDAP_OPT_PROTOCOL_VERSION] = 3;
+	$ldap_options[LDAP_OPT_REFERRALS] = !empty($config['ldap']['follow_referrals']);
+	$ldap = new LDAP($config['ldap']['host'], $config['ldap']['starttls'], $config['ldap']['bind_dn'], $config['ldap']['bind_password'], $ldap_options);
+}
 setup_database();
 
 $relative_frontend_base_url = (string)parse_url($config['web']['baseurl'], PHP_URL_PATH);

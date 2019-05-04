@@ -29,22 +29,28 @@ try {
 	$active_user->uid = 'keys-sync';
 	$active_user->name = 'Synchronization script';
 	$active_user->email = '';
+	$active_user->auth_realm = 'local';
 	$active_user->active = 1;
 	$active_user->admin = 1;
 	$active_user->developer = 0;
 	$user_dir->add_user($active_user);
 }
 
-try {
-	$sysgrp = $group_dir->get_group_by_name($config['ldap']['admin_group_cn']);
-} catch(GroupNotFoundException $e) {
-	$sysgrp = new Group;
-	$sysgrp->name = $config['ldap']['admin_group_cn'];
-	$sysgrp->system = 1;
-	$group_dir->add_group($sysgrp);
+$ldap_enabled = $config['ldap']['enabled'];
+
+if($ldap_enabled == 1) {
+	try {
+		$sysgrp = $group_dir->get_group_by_name($config['ldap']['admin_group_cn']);
+	} catch(GroupNotFoundException $e) {
+		$sysgrp = new Group;
+		$sysgrp->name = $config['ldap']['admin_group_cn'];
+		$sysgrp->system = 1;
+		$group_dir->add_group($sysgrp);
+	}
 }
+
 foreach($users as $user) {
-	if($user->auth_realm == 'LDAP') {
+	if($user->auth_realm == 'LDAP' && $ldap_enabled == 1) {
 		$active = $user->active;
 		try {
 			$user->get_details_from_ldap();
