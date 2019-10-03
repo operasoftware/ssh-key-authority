@@ -23,7 +23,7 @@
 	<dl class="oneline">
 		<?php if(isset($this->get('inventory_config')['url']) && $this->get('server')->uuid) { ?>
 		<dt>Inventory UUID:</dt>
-		<dd><a href="<?php out(printf($this->get('inventory_config')['url'], $this->get('server')->uuid), ESC_URL)?>/"><?php out($this->get('server')->uuid)?></a></dd>
+		<dd><a href="<?php out(sprintf($this->get('inventory_config')['url'], $this->get('server')->uuid), ESC_HTML)?>/"><?php out($this->get('server')->uuid)?></a></dd>
 		<?php } ?>
 		<dt>Sync status:</dt>
 		<dd id="server_sync_status"
