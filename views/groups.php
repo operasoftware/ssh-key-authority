@@ -16,6 +16,7 @@
 ##
 
 if(isset($_POST['add_group']) && ($active_user->admin)) {
+	// create a local group
 	$name = trim($_POST['name']);
 	if(preg_match('|/|', $name)) {
 		$content = new PageSection('invalid_group_name');
@@ -46,6 +47,31 @@ if(isset($_POST['add_group']) && ($active_user->admin)) {
 			redirect('#add');
 		}
 	}
+} else if (isset($_POST['add_ldap_group']) && $active_user->admin) {
+	$group_guid = $_POST['ldap_group'];
+	$result = $ldap->search($config['ldap']['dn_group'], 'objectguid='.LDAP::query_encode_guid($group_guid), ['cn']);
+	$alert = new UserAlert;
+	if (!empty($result)) {
+		try {
+			$group = new Group;
+			$group->name = $result[0]['cn'];
+			$group->system = 1;
+			$group->ldap_guid = $group_guid;
+			$group_dir->add_group($group);
+
+			$alert->content = 'Group \'<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="alert-link">'.hesc($group->name).'</a>\' successfully connected.';
+			$alert->escaping = ESC_NONE;
+		} catch (GroupAlreadyExistsException $e) {
+			$alert->content = 'Group \'<a href="'.rrurl('/groups/'.urlencode($group->name)).'" class="alert-link">'.hesc($group->name).'</a>\' already exists.';
+			$alert->escaping = ESC_NONE;
+			$alert->class = 'danger';
+		}
+	} else {
+		$alert->content = 'Could not find this group on the ldap server';
+		$alert->class = 'danger';
+	}
+	$active_user->add_alert($alert);
+	redirect('#add');
 } else {
 	$defaults = array();
 	$defaults['active'] = array('1');
@@ -65,6 +91,7 @@ if(isset($_POST['add_group']) && ($active_user->admin)) {
 	$content->set('admin', $active_user->admin);
 	$content->set('groups', $groups);
 	$content->set('all_users', $user_dir->list_users());
+	$content->set('all_ldap_groups', $ldap->search($config['ldap']['dn_group'], 'objectclass=group', [$config['ldap']['user_id'], 'objectguid']));
 }
 
 $page = new PageSection('base');

@@ -27,13 +27,14 @@ class GroupDirectory extends DBDirectory {
 	public function add_group(Group $group) {
 		$name = $group->name;
 		$system = $group->system;
+		$ldap_guid = $group->ldap_guid;
 		$this->database->begin_transaction();
 		$stmt = $this->database->prepare("INSERT INTO entity SET type = 'group'");
 		$stmt->execute();
 		$group->entity_id = $stmt->insert_id;
 		$stmt->close();
-		$stmt = $this->database->prepare("INSERT INTO `group` SET entity_id = ?, name = ?, system = ?");
-		$stmt->bind_param('dsd', $group->entity_id, $name, $system);
+		$stmt = $this->database->prepare("INSERT INTO `group` SET entity_id = ?, name = ?, system = ?, ldap_guid = ?");
+		$stmt->bind_param('dsds', $group->entity_id, $name, $system, $ldap_guid);
 		try {
 			$stmt->execute();
 			$stmt->close();
