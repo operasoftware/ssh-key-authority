@@ -110,6 +110,9 @@ class GroupDirectory extends DBDirectory {
 				case 'active':
 					$where[] = "`group`.active IN (".implode(", ", array_map('intval', $value)).")";
 					break;
+				case 'system':
+					$where[] = "`group`.system = ".intval($value);
+					break;
 				case 'admin':
 					$where[] = "admin_filter.admin = ".intval($value);
 					$joins['adminfilter'] = "INNER JOIN entity_admin admin_filter ON admin_filter.entity_id = `group`.entity_id";

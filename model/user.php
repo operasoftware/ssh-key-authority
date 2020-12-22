@@ -31,6 +31,10 @@ class User extends Entity {
 	* LDAP connection object
 	*/
 	private $ldap;
+	/**
+	 * Group guid's, this user is member of (will be set by get_details_from_ldap())
+	 */
+	private $ldap_group_guids;
 
 	public function __construct($id = null, $preload_data = array()) {
 		parent::__construct($id, $preload_data);
@@ -326,13 +330,29 @@ class User extends Entity {
 			}
 			$this->admin = 0;
 			$group_member = $ldapuser[strtolower($config['ldap']['group_member_value'])];
-			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member), array('cn'));
+			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member), array('cn', 'objectguid'));
+			$ldap_group_guids = [];
 			foreach($ldapgroups as $ldapgroup) {
+				$ldap_group_guids[] = $ldapgroup['objectguid'];
 				if($ldapgroup['cn'] == $config['ldap']['admin_group_cn']) $this->admin = 1;
 			}
+			$this->ldap_group_guids = $ldap_group_guids;
 		} else {
 			throw new UserNotFoundException('User does not exist.');
 		}
+	}
+
+	/**
+	 * Get the group ObjectGUIDs, this user is member of. Fetch them via ldap, if not already done.
+	 *
+	 * @return string[] guids of the groups this user is member of
+	 */
+	public function get_ldap_group_guids() {
+		global $config;
+		if ($this->ldap_group_guids === null) {
+			$this->get_details_from_ldap();
+		}
+		return $this->ldap_group_guids;
 	}
 
 	/**

@@ -43,6 +43,18 @@ try {
 	$sysgrp->system = 1;
 	$group_dir->add_group($sysgrp);
 }
+// Add guid of main admin group, if not already stored
+if ($sysgrp->ldap_guid === null) {
+	$sysgrp_ldap = $ldap->search($config['ldap']['dn_group'],
+			LDAP::escape($config['ldap']['user_id']).'='.LDAP::escape($sysgrp->name),
+			['objectguid']);
+	if (!empty($sysgrp_ldap)) {
+		$sysgrp->ldap_guid = $sysgrp_ldap[0]['objectguid'];
+		$sysgrp->update();
+	}
+}
+
+$sys_groups = $group_dir->list_groups([], ['system' => 1]);
 foreach($users as $user) {
 	if($user->auth_realm == 'LDAP') {
 		$active = $user->active;
@@ -88,11 +100,14 @@ foreach($users as $user) {
 				}
 			}
 		}
-		if($user->admin && $user->active && !$user->member_of($sysgrp)) {
-			$sysgrp->add_member($user);
-		}
-		if(!($user->admin && $user->active) && $user->member_of($sysgrp)) {
-			$sysgrp->delete_member($user);
+		foreach ($sys_groups as $sys_group) {
+			$should_be_member = $user->active && in_array(strtolower($sys_group->ldap_guid), $user->get_ldap_group_guids());
+			if ($should_be_member && !$user->member_of($sys_group)) {
+				$sys_group->add_member($user);
+			}
+			if (!$should_be_member && $user->member_of($sys_group)) {
+				$sys_group->delete_member($user);
+			}
 		}
 		$user->update();
 	}

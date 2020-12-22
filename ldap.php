@@ -46,6 +46,14 @@ class LDAP {
 		}
 	}
 
+	private function decode_guid($encoded) {
+		return bin2hex(strrev(substr($encoded, 0, 4))) . '-' .
+				bin2hex(strrev(substr($encoded, 4, 2))) . '-' .
+				bin2hex(strrev(substr($encoded, 6, 2))) . '-' .
+				bin2hex(substr($encoded, 8, 2)) . '-' .
+				bin2hex(substr($encoded, 10, 6));
+	}
+
 	public function search($basedn, $filter, $fields = array(), $sort = array()) {
 		if(is_null($this->conn)) $this->connect();
 		if(empty($fields)) $r = @ldap_search($this->conn, $basedn, $filter);
@@ -67,6 +75,9 @@ class LDAP {
 						if(is_array($values)) {
 							unset($values['count']);
 							if(count($values) == 1) $values = $values[0];
+						}
+						if (strtolower($key) === 'objectguid') {
+							$values = self::decode_guid($values);
 						}
 						$itemResult[$key] = $values;
 					}
