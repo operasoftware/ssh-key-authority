@@ -356,6 +356,22 @@ class User extends Entity {
 	}
 
 	/**
+	 * Adds the user to ldap groups or removes him from ldap groups, based on the current status on the directory server.
+	 */
+	public function update_group_memberships() {
+		global $group_dir;
+		foreach ($group_dir->get_sys_groups() as $sys_group) {
+			$should_be_member = $this->active && in_array(strtolower($sys_group->ldap_guid), $this->get_ldap_group_guids());
+			if ($should_be_member && !$this->member_of($sys_group)) {
+				$sys_group->add_member($this);
+			}
+			if (!$should_be_member && $this->member_of($sys_group)) {
+				$sys_group->delete_member($this);
+			}
+		}
+	}
+
+	/**
 	* Retrieve the user's superior from LDAP.
 	* @throws UserNotFoundException if the user is not found in LDAP
 	*/

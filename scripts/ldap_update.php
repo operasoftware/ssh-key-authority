@@ -54,7 +54,6 @@ if ($sysgrp->ldap_guid === null) {
 	}
 }
 
-$sys_groups = $group_dir->list_groups([], ['system' => 1]);
 foreach($users as $user) {
 	if($user->auth_realm == 'LDAP') {
 		$active = $user->active;
@@ -100,15 +99,7 @@ foreach($users as $user) {
 				}
 			}
 		}
-		foreach ($sys_groups as $sys_group) {
-			$should_be_member = $user->active && in_array(strtolower($sys_group->ldap_guid), $user->get_ldap_group_guids());
-			if ($should_be_member && !$user->member_of($sys_group)) {
-				$sys_group->add_member($user);
-			}
-			if (!$should_be_member && $user->member_of($sys_group)) {
-				$sys_group->delete_member($user);
-			}
-		}
+		$user->update_group_memberships();
 		$user->update();
 	}
 }

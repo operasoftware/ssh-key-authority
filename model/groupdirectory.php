@@ -200,6 +200,19 @@ class GroupDirectory extends DBDirectory {
 		$stmt->close();
 		return $groups;
 	}
+
+	/**
+	 * Get a list of the groups that are managed by ldap. (visible as system=1 in the database)
+	 * The result of this function is cached for better performance.
+	 * @return Group[] The list of ldap groups
+	 */
+	public function get_sys_groups() {
+		static $sys_groups = null;
+		if ($sys_groups === null) {
+			$sys_groups = $this->list_groups([], ['system' => 1]);
+		}
+		return $sys_groups;
+	}
 }
 
 class GroupNotFoundException extends Exception {}
