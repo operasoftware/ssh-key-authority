@@ -363,7 +363,8 @@ class User extends Entity {
 		foreach ($group_dir->get_sys_groups() as $sys_group) {
 			$should_be_member = $this->active && in_array(strtolower($sys_group->ldap_guid), $this->get_ldap_group_guids());
 			if ($should_be_member && !$this->member_of($sys_group)) {
-				$sys_group->add_member($this);
+				// Use the keys-sync user as actor, because this is an automatic process
+				$sys_group->add_member($this, User::get_keys_sync_user());
 			}
 			if (!$should_be_member && $this->member_of($sys_group)) {
 				$sys_group->delete_member($this);
@@ -400,6 +401,30 @@ class User extends Entity {
 		} else {
 			throw new UserNotFoundException('User does not exist.');
 		}
+	}
+
+	/**
+	 * The keys-sync user is used internally to do regular tasks (ldap update, rollout of keys)
+	 * This function returns an instance of this keys-sync user.
+	 * If the user does not exist yet, it will be created.
+	 *
+	 * @return User An instance of the keys-sync user
+	 */
+	public static function get_keys_sync_user() {
+		global $user_dir;
+		try {
+			$keys_sync = $user_dir->get_user_by_uid('keys-sync');
+		} catch(UserNotFoundException $e) {
+			$keys_sync = new User;
+			$keys_sync->uid = 'keys-sync';
+			$keys_sync->name = 'Synchronization script';
+			$keys_sync->email = '';
+			$keys_sync->active = 1;
+			$keys_sync->admin = 1;
+			$keys_sync->developer = 0;
+			$user_dir->add_user($keys_sync);
+		}
+		return $keys_sync;
 	}
 
 	/**

@@ -21,19 +21,8 @@ require('../core.php');
 
 $users = $user_dir->list_users();
 
-// Use 'keys-sync' user as the active user (create if it does not yet exist)
-try {
-	$active_user = $user_dir->get_user_by_uid('keys-sync');
-} catch(UserNotFoundException $e) {
-	$active_user = new User;
-	$active_user->uid = 'keys-sync';
-	$active_user->name = 'Synchronization script';
-	$active_user->email = '';
-	$active_user->active = 1;
-	$active_user->admin = 1;
-	$active_user->developer = 0;
-	$user_dir->add_user($active_user);
-}
+// Use 'keys-sync' user as the active user
+$active_user = User::get_keys_sync_user();
 
 try {
 	$sysgrp = $group_dir->get_group_by_name($config['ldap']['admin_group_cn']);

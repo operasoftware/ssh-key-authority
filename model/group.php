@@ -111,55 +111,42 @@ class Group extends Entity {
 	* This action is logged with a warning level as it is potentially granting access.
 	* @todo remove nested group functionality
 	* @param Entity $entity to add as a group member
+	* @param User $actor The user who performs this action. In case of null, $this->active_user is assumed.
 	*/
-	public function add_member(Entity $entity) {
-		global $config;
+	public function add_member(Entity $entity, User $actor = null) {
 		if(is_null($this->entity_id)) throw new BadMethodCallException('Group must be in directory before members can be added');
 		if(is_null($entity->entity_id)) throw new InvalidArgumentException('Entity must be in directory before it can be added to a group');
 		$entity_id = $entity->entity_id;
+		if ($actor === null) {
+			$actor = $this->active_user;
+		}
 		switch(get_class($entity)) {
 		case 'User':
-			$name = "user {$entity->uid}";
-			$mailsubject = "{$entity->uid} added to {$this->name} group by {$this->active_user->uid}";
-			$mailbody = "{$entity->name} ({$entity->uid}) has been added to the {$this->name} group by {$this->active_user->name} ({$this->active_user->uid}).";
 			$logmsg = array('action' => 'Member add', 'value' => "user:{$entity->uid}");
 			break;
 		case 'ServerAccount':
 			// We should not allow adding server accounts to a group if the active user is not an admin of that server or server account
-			if(!$this->active_user->admin && !$this->active_user->admin_of($entity->server) && !$this->active_user->admin_of($entity)) {
+			if(!$actor->admin && !$actor->admin_of($entity->server) && !$actor->admin_of($entity)) {
 				throw new InvalidArgumentException('Active user is not an administrator of the specified server account');
 			}
-			$name = "account {$entity->name}@{$entity->server->hostname}";
-			$mailsubject = "{$entity->name}@{$entity->server->hostname} added to {$this->name} group by {$this->active_user->uid}";
-			$mailbody = "{$entity->name}@{$entity->server->hostname} has been added to the {$this->name} group by {$this->active_user->name} ({$this->active_user->uid}).";
 			$logmsg = array('action' => 'Member add', 'value' => "account:{$entity->name}@{$entity->server->hostname}");
 			break;
 		case 'Group':
 			// We should not allow adding groups to a group if the active user is not an admin of that group
-			if(!$this->active_user->admin && !$this->active_user->admin_of($entity)) {
+			if(!$actor->admin && !$actor->admin_of($entity)) {
 				throw new InvalidArgumentException('Active user is not an administrator of the specified group');
 			}
-			$name = "group {$entity->name}";
-			$mailsubject = "{$entity->name} group added to {$this->name} group by {$this->active_user->uid}";
-			$mailbody = "The {$entity->name} group has been added to the {$this->name} group by {$this->active_user->name} ({$this->active_user->uid}).";
 			$logmsg = array('action' => 'Member add', 'value' => "group:{$entity->name}");
 			break;
 		}
 		try {
 			$stmt = $this->database->prepare("INSERT INTO group_member SET `group` = ?, entity_id = ?, add_date = UTC_TIMESTAMP(), added_by = ?");
-			$stmt->bind_param('ddd', $this->entity_id, $entity_id, $this->active_user->entity_id);
+			$stmt->bind_param('ddd', $this->entity_id, $entity_id, $actor->entity_id);
 			$stmt->execute();
 			$stmt->close();
-			$this->log($logmsg, LOG_WARNING);
-			if($this->active_user->uid != 'import-script') {
-				$email = new Email;
-				foreach($this->list_admins() as $admin) {
-					$email->add_recipient($admin->email, $admin->name);
-				}
-				$email->add_cc($config['email']['report_address'], $config['email']['report_name']);
-				$email->subject = $mailsubject;
-				$email->body = $mailbody;
-				$email->send();
+			$this->log($logmsg, LOG_WARNING, $actor);
+			if($actor->uid != 'import-script') {
+				$this->send_mail_addmember($entity, $actor);
 			}
 		} catch(mysqli_sql_exception $e) {
 			if($e->getCode() == 1062) {
@@ -170,6 +157,38 @@ class Group extends Entity {
 		}
 		$entity->sync_access(); // This entity is now a member of the group, so any access rules that apply to the group now apply to the entity
 		$this->sync_remote_access(); // If this group has access to anything, this entity now also has access to it
+	}
+
+	/**
+	 * Send a mail to admins informing them about the new added member of this group.
+	 *
+	 * @param Entity $entity The new member (user, server account, group) of this group
+	 * @param User $actor The user who performs this action.
+	 */
+	private function send_mail_addmember(Entity $entity, User $actor) {
+		global $config;
+		switch (get_class($entity)) {
+			case 'User':
+				$mailsubject = "{$entity->uid} added to {$this->name} group by {$actor->uid}";
+				$mailbody = "{$entity->name} ({$entity->uid}) has been added to the {$this->name} group by {$actor->name} ({$actor->uid}).";
+				break;
+			case 'ServerAccount':
+				$mailsubject = "{$entity->name}@{$entity->server->hostname} added to {$this->name} group by {$actor->uid}";
+				$mailbody = "{$entity->name}@{$entity->server->hostname} has been added to the {$this->name} group by {$actor->name} ({$actor->uid}).";
+				break;
+			case 'Group':
+				$mailsubject = "{$entity->name} group added to {$this->name} group by {$actor->uid}";
+				$mailbody = "The {$entity->name} group has been added to the {$this->name} group by {$actor->name} ({$actor->uid}).";
+				break;
+		}
+		$email = new Email;
+		foreach ($this->list_admins() as $admin) {
+			$email->add_recipient($admin->email, $admin->name);
+		}
+		$email->add_cc($config['email']['report_address'], $config['email']['report_name']);
+		$email->subject = $mailsubject;
+		$email->body = $mailbody;
+		$email->send();
 	}
 
 	/**

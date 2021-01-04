@@ -29,9 +29,13 @@ abstract class Entity extends Record {
 	* Write event details to syslog and to entity_event table.
 	* @param array $details event paramaters to be logged
 	* @param int $level syslog priority as defined in http://php.net/manual/en/function.syslog.php
+	* @param User $actor The user who performs the logged action. In case of null, $this->active_user is assumed.
 	*/
-	public function log($details, $level = LOG_INFO) {
+	public function log($details, $level = LOG_INFO, User $actor = null) {
 		if(is_null($this->id)) throw new BadMethodCallException('Entity must be in directory before log entries can be added');
+		if ($actor === null) {
+			$actor = $this->active_user;
+		}
 		switch(get_class($this)) {
 		case 'User':
 			$scope = "user:{$this->uid}";
@@ -47,11 +51,11 @@ abstract class Entity extends Record {
 		}
 		$json = json_encode($details, JSON_UNESCAPED_UNICODE);
 		$stmt = $this->database->prepare("INSERT INTO entity_event SET entity_id = ?, actor_id = ?, date = UTC_TIMESTAMP(), details = ?");
-		$stmt->bind_param('dds', $this->id, $this->active_user->entity_id, $json);
+		$stmt->bind_param('dds', $this->id, $actor->entity_id, $json);
 		$stmt->execute();
 		$stmt->close();
 
-		$text = "KeysScope=\"{$scope}\" KeysRequester=\"{$this->active_user->uid}\"";
+		$text = "KeysScope=\"{$scope}\" KeysRequester=\"{$actor->uid}\"";
 		foreach($details as $key => $value) {
 			$text .= ' Keys'.ucfirst($key).'="'.str_replace('"', '', $value).'"';
 		}
