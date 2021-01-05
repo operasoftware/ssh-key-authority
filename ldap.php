@@ -46,7 +46,14 @@ class LDAP {
 		}
 	}
 
-	private static function decode_guid($encoded) {
+	/**
+	 * Decode a raw binary 16-byte guid (as given by ldap) to a readable
+	 * guid string like 0d187752-3d90-4c9c-8db2-eb7003163a82
+	 *
+	 * @param string $encoded
+	 * @return string
+	 */
+	private static function decode_guid(string $encoded) {
 		return bin2hex(strrev(substr($encoded, 0, 4))) . '-' .
 				bin2hex(strrev(substr($encoded, 4, 2))) . '-' .
 				bin2hex(strrev(substr($encoded, 6, 2))) . '-' .
