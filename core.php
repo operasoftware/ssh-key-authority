@@ -65,7 +65,14 @@ function autoload_model($classname) {
 function setup_database() {
 	global $config, $database, $driver, $pubkey_dir, $user_dir, $group_dir, $server_dir, $server_account_dir, $event_dir, $sync_request_dir;
 	try {
-		$database = new mysqli($config['database']['hostname'], $config['database']['username'], $config['database']['password'], $config['database']['database'], $config['database']['port']);
+		if ($config['database']['usetls']) {
+			$database = mysqli_init();
+			$database->options(MYSQLI_OPT_SSL_VERIFY_SERVER_CERT, true);
+			$database->ssl_set(NULL, NULL, $config['database']['tls_ca_cert'], NULL, NULL);
+			$database->real_connect($config['database']['hostname'], $config['database']['username'], $config['database']['password'], $config['database']['database'], $config['database']['port']);
+		} else {
+			$database = new mysqli($config['database']['hostname'], $config['database']['username'], $config['database']['password'], $config['database']['database'], $config['database']['port']);
+		}
 	} catch(ErrorException $e) {
 		throw new DBConnectionFailedException($e->getMessage());
 	}
