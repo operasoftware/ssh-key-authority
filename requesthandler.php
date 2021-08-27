@@ -27,7 +27,6 @@ if(isset($_SERVER['PHP_AUTH_USER'])) {
 }
 
 // Work out where we are on the server
-$base_path = dirname(__FILE__);
 $base_url = dirname($_SERVER['SCRIPT_NAME']);
 $request_url = $_SERVER['REQUEST_URI'];
 $relative_request_url = preg_replace('/^'.preg_quote($base_url, '/').'/', '/', $request_url);

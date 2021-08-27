@@ -15,7 +15,8 @@
 ## limitations under the License.
 ##
 
-chdir(dirname(__FILE__));
+$base_path = dirname(__FILE__);
+chdir($base_path);
 mb_internal_encoding('UTF-8');
 date_default_timezone_set('UTC');
 set_error_handler('exception_error_handler');
