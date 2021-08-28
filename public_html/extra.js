@@ -362,6 +362,7 @@ $(function() {
 					setTimeout(get_server_account_sync_status, timeout);
 				} else {
 					var classname;
+					var message;
 					if(status.sync_status == 'sync success') { classname = 'success'; message = 'Synced'; }
 					if(status.sync_status == 'sync failure') { classname = 'danger'; message = 'Failed'; }
 					if(status.sync_status == 'sync warning') { classname = 'warning'; message = 'Not synced'; }
