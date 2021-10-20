@@ -32,7 +32,7 @@ class GroupDirectory extends DBDirectory {
 		$stmt->execute();
 		$group->entity_id = $stmt->insert_id;
 		$stmt->close();
-		$stmt = $this->database->prepare("INSERT INTO `group` SET entity_id = ?, name = ?, system = ?");
+		$stmt = $this->database->prepare("INSERT INTO `group` SET entity_id = ?, name = ?, `system` = ?");
 		$stmt->bind_param('dsd', $group->entity_id, $name, $system);
 		try {
 			$stmt->execute();
