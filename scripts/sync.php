@@ -235,8 +235,8 @@ function sync_server($id, $only_username = null, $preview = false) {
 		return;
 	}
 	// IP address check
-	echo date('c')." {$hostname}: Checking IP address {$server->ip_address}.\n";
-	$matching_servers = $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'key_management' => array('keys')));
+	echo date('c')." {$hostname}: Checking IP address {$server->ip_address}:{$server->port}.\n";
+	$matching_servers = $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'port' => $server->port, 'key_management' => array('keys')));
 	if(count($matching_servers) > 1) {
 		echo date('c')." {$hostname}: Multiple hosts with same IP address.\n";
 		$server->sync_report('sync failure', 'Multiple hosts with same IP address');
