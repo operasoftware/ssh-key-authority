@@ -291,7 +291,7 @@ if(isset($_POST['sync']) && ($server_admin || $active_user->admin)) {
 		$content->set('all_users', $all_users);
 		$content->set('last_sync', $server->get_last_sync_event());
 		$content->set('sync_requests', $server->list_sync_requests());
-		$content->set('matching_servers_by_ip', $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'key_management' => array('keys'))));
+		$content->set('matching_servers_by_ip', $server_dir->list_servers(array(), array('ip_address' => $server->ip_address, 'port' => $server->port, 'key_management' => array('keys'))));
 		$content->set('matching_servers_by_host_key', $server_dir->list_servers(array(), array('rsa_key_fingerprint' => $server->rsa_key_fingerprint, 'key_management' => array('keys'))));
 		$content->set('all_groups', $all_groups);
 		$content->set('all_servers', $all_servers);
