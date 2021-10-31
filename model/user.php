@@ -298,7 +298,7 @@ class User extends Entity {
 	* @throws UserNotFoundException if the user is not found in LDAP
 	*/
 	public function get_details_from_ldap() {
-		global $config;
+		global $config, $group_dir;
 		$attributes = array();
 		$attributes[] = 'dn';
 		$attributes[] = $config['ldap']['user_id'];
@@ -327,8 +327,35 @@ class User extends Entity {
 			$this->admin = 0;
 			$group_member = $ldapuser[strtolower($config['ldap']['group_member_value'])];
 			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member), array('cn'));
+			$memberships = array();
 			foreach($ldapgroups as $ldapgroup) {
-				if($ldapgroup['cn'] == $config['ldap']['admin_group_cn']) $this->admin = 1;
+				$memberships[$ldapgroup['cn']] = true;
+			}
+			if(isset($config['ldap']['sync_groups']) && is_array($config['ldap']['sync_groups'])) {
+				$syncgroups = $config['ldap']['sync_groups'];
+			} else {
+				$syncgroups = array();
+			}
+			$syncgroups[] = $config['ldap']['admin_group_cn'];
+			foreach($syncgroups as $syncgroup) {
+				try {
+					$group = $group_dir->get_group_by_name($syncgroup);
+				} catch(GroupNotFoundException $e) {
+					$group = new Group;
+					$group->name = $syncgroup;
+					$group->system = 1;
+					$group_dir->add_group($group);
+				}
+				if(isset($memberships[$syncgroup])) {
+					if($syncgroup == $config['ldap']['admin_group_cn']) $this->admin = 1;
+					if(!$this->member_of($group)) {
+						$group->add_member($this);
+					}
+				} else {
+					if($this->member_of($group)) {
+						$group->delete_member($this);
+					}
+				}
 			}
 		} else {
 			throw new UserNotFoundException('User does not exist.');

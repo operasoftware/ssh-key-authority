@@ -35,14 +35,6 @@ try {
 	$user_dir->add_user($active_user);
 }
 
-try {
-	$sysgrp = $group_dir->get_group_by_name($config['ldap']['admin_group_cn']);
-} catch(GroupNotFoundException $e) {
-	$sysgrp = new Group;
-	$sysgrp->name = $config['ldap']['admin_group_cn'];
-	$sysgrp->system = 1;
-	$group_dir->add_group($sysgrp);
-}
 foreach($users as $user) {
 	if($user->auth_realm == 'LDAP') {
 		$active = $user->active;
@@ -87,12 +79,6 @@ foreach($users as $user) {
 					$email->send();
 				}
 			}
-		}
-		if($user->admin && $user->active && !$user->member_of($sysgrp)) {
-			$sysgrp->add_member($user);
-		}
-		if(!($user->admin && $user->active) && $user->member_of($sysgrp)) {
-			$sysgrp->delete_member($user);
 		}
 		$user->update();
 	}
