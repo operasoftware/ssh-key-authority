@@ -127,6 +127,9 @@ class ServerDirectory extends DBDirectory {
 				case 'rsa_key_fingerprint':
 					$where[] = "server.$field = '".$this->database->escape_string($value)."'";
 					break;
+				case 'port':
+					$where[] = "server.$field = ".intval($value);
+					break;
 				case 'admin':
 					$where[] = "admin_search.entity_id = ".intval($value)." OR admin_search_members.entity_id = ".intval($value);
 					$joins['adminsearch'] = "LEFT JOIN server_admin AS admin_search ON admin_search.server_id = server.id";
