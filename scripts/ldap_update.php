@@ -40,7 +40,6 @@ foreach($users as $user) {
 		$active = $user->active;
 		try {
 			$user->get_details_from_ldap();
-			$user->update();
 			if(isset($config['ldap']['user_superior'])) {
 				$user->get_superior_from_ldap();
 			}
