@@ -313,6 +313,11 @@ class User extends Entity {
 		} else {
 			$user_filter = '';
 		}
+		if(isset($config['ldap']['group_filter'])) {
+			$group_filter = $config['ldap']['group_filter'];
+		} else {
+			$group_filter = '';
+		}
 		$ldapusers = $this->ldap->search($config['ldap']['dn_user'], '(&('.LDAP::escape($config['ldap']['user_id']).'='.LDAP::escape($this->uid).')'.$user_filter.')', array_keys(array_flip($attributes)));
 		if($ldapuser = reset($ldapusers)) {
 			$this->auth_realm = 'LDAP';
@@ -330,7 +335,7 @@ class User extends Entity {
 				$this->active = 1;
 			}
 			$group_member = $ldapuser[strtolower($config['ldap']['group_member_value'])];
-			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member), array('cn'));
+			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], '(&('.LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member).')'.$group_filter.')', array('cn'));
 			$memberships = array();
 			foreach($ldapgroups as $ldapgroup) {
 				$memberships[$ldapgroup['cn']] = true;
