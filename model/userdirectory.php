@@ -78,10 +78,11 @@ class UserDirectory extends DBDirectory {
 	* Get a user from the database by its uid. If it does not exist in the database, retrieve it
 	* from LDAP and store in the database.
 	* @param string $uid of user
+	* @param bool $login true if getting user as part of login process
 	* @return User with specified entity uid
 	* @throws UserNotFoundException if no user with that uid exists
 	*/
-	public function get_user_by_uid($uid) {
+	public function get_user_by_uid($uid, $login = false) {
 		if(isset($this->cache_uid[$uid])) {
 			return $this->cache_uid[$uid];
 		}
@@ -96,7 +97,7 @@ class UserDirectory extends DBDirectory {
 			$user = new User;
 			$user->uid = $uid;
 			$this->cache_uid[$uid] = $user;
-			$user->get_details_from_ldap();
+			$user->get_details_from_ldap($login);
 		}
 		$stmt->close();
 		return $user;

@@ -295,10 +295,11 @@ class User extends Entity {
 
 	/**
 	* Retrieve the user's details from LDAP.
+	* @param bool $login true if getting user details as part of login process
 	* @throws UserNotFoundException if the user is not found in LDAP
 	*/
-	public function get_details_from_ldap() {
-		global $config, $group_dir, $user_dir;
+	public function get_details_from_ldap($login = false) {
+		global $config, $group_dir, $user_dir, $active_user;
 		$attributes = array();
 		$attributes[] = 'dn';
 		$attributes[] = $config['ldap']['user_id'];
@@ -345,6 +346,9 @@ class User extends Entity {
 				$this->update();
 			} else {
 				$user_dir->add_user($this);
+				if($login) {
+					$active_user = $this;
+				}
 			}
 			if(isset($config['ldap']['sync_groups']) && is_array($config['ldap']['sync_groups'])) {
 				$syncgroups = $config['ldap']['sync_groups'];

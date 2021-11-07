@@ -21,7 +21,7 @@ ob_start();
 set_exception_handler('exception_handler');
 
 if(isset($_SERVER['PHP_AUTH_USER'])) {
-	$active_user = $user_dir->get_user_by_uid($_SERVER['PHP_AUTH_USER']);
+	$active_user = $user_dir->get_user_by_uid($_SERVER['PHP_AUTH_USER'], true);
 } else {
 	throw new Exception("Not logged in.");
 }
