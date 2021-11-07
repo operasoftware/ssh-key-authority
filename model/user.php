@@ -340,7 +340,7 @@ class User extends Entity {
 			foreach($ldapgroups as $ldapgroup) {
 				$memberships[$ldapgroup['cn']] = true;
 			}
-			$this->admin = isset($memberships[$config['ldap']['admin_group_cn']]);
+			$this->admin = (int)isset($memberships[$config['ldap']['admin_group_cn']]);
 			if(isset($this->id)) {
 				$this->update();
 			} else {
