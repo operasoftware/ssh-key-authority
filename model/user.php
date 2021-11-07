@@ -308,7 +308,12 @@ class User extends Entity {
 		if(isset($config['ldap']['user_active'])) {
 			$attributes[] = $config['ldap']['user_active'];
 		}
-		$ldapusers = $this->ldap->search($config['ldap']['dn_user'], LDAP::escape($config['ldap']['user_id']).'='.LDAP::escape($this->uid), array_keys(array_flip($attributes)));
+		if(isset($config['ldap']['user_filter'])) {
+			$user_filter = $config['ldap']['user_filter'];
+		} else {
+			$user_filter = '';
+		}
+		$ldapusers = $this->ldap->search($config['ldap']['dn_user'], '(&('.LDAP::escape($config['ldap']['user_id']).'='.LDAP::escape($this->uid).')'.$user_filter.')', array_keys(array_flip($attributes)));
 		if($ldapuser = reset($ldapusers)) {
 			$this->auth_realm = 'LDAP';
 			$this->uid = $ldapuser[strtolower($config['ldap']['user_id'])];
