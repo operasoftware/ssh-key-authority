@@ -26,7 +26,9 @@ foreach($this->get('servers') as $server) {
 	if($this->get('active_user')->admin) {
 		$jsonserver->admins = array();
 		foreach($server->list_effective_admins() as $admin) {
-			$jsonserver->admins[] = $admin->uid;
+			if($admin->active) {
+				$jsonserver->admins[] = $admin->uid;
+			}
 		}
 	}
 	if($last_sync_event) {
