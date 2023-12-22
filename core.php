@@ -64,7 +64,7 @@ function autoload_model($classname) {
 
 // Setup database connection and models
 function setup_database() {
-	global $config, $database, $driver, $pubkey_dir, $user_dir, $group_dir, $server_dir, $server_account_dir, $event_dir, $sync_request_dir;
+	global $config, $database, $driver, $migration_dir, $pubkey_dir, $user_dir, $group_dir, $server_dir, $server_account_dir, $event_dir, $sync_request_dir;
 	try {
 		$database = new mysqli($config['database']['hostname'], $config['database']['username'], $config['database']['password'], $config['database']['database'], $config['database']['port']);
 	} catch(ErrorException $e) {
