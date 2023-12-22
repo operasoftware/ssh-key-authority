@@ -113,6 +113,7 @@ define('ESC_NONE', 9);
 * @param integer $escaping method of escaping to use
 */
 function out($string, $escaping = ESC_HTML) {
+	if(is_null($string)) return '';
 	switch($escaping) {
 	case ESC_HTML:
 		echo htmlspecialchars($string);
@@ -155,7 +156,7 @@ function outurl($url) {
  * @return string HTML-escaped string
  */
 function hesc($string) {
-	return htmlspecialchars($string);
+	return htmlspecialchars($string ?? '');
 }
 
 function english_list($array) {
