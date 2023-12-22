@@ -21,7 +21,7 @@ if(isset($_POST['add_server']) && ($active_user->admin)) {
 		$content = new PageSection('invalid_hostname');
 		$content->set('hostname', $hostname);
 	} else {
-		$admin_names = preg_split('/[\s,]+/', $_POST['admins'], null, PREG_SPLIT_NO_EMPTY);
+		$admin_names = preg_split('/[\s,]+/', $_POST['admins'], -1, PREG_SPLIT_NO_EMPTY);
 		$admins = array();
 		foreach($admin_names as $admin_name) {
 			$admin_name = trim($admin_name);
