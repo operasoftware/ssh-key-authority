@@ -23,7 +23,9 @@ foreach($this->get('servers') as $server) {
 	$jsonserver->hostname = $server->hostname;
 	$jsonserver->key_management = $server->key_management;
 	$jsonserver->sync_status = $server->sync_status;
-	if($this->get('active_user')->admin) {
+	if($this->get('active_user')->admin ||
+		(isset($config['general']['fake_viewonly_admin']) && is_array($config['general']['fake_viewonly_admin']) && in_array($this->get('active_user')->uid, $config['general']['fake_viewonly_admin'], true))
+	)
 		$jsonserver->admins = array();
 		foreach($server->list_effective_admins() as $admin) {
 			if($admin->active) {
