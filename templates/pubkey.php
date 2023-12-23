@@ -35,7 +35,7 @@ $owner = $this->get('pubkey')->owner;
 	}
 	?>
 </h1>
-<?php if($this->get('user_is_owner') || $this->get('admin')) { ?>
+<?php if($this->get('admin')) { ?>
 <ul class="nav nav-tabs">
 	<li><a href="#info" data-toggle="tab">Information</a></li>
 	<li><a href="#sig" data-toggle="tab">Key signing</a></li>

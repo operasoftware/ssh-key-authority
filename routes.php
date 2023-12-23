@@ -45,6 +45,7 @@ $routes = array(
 	'/users/{username}/pubkeys.{format}' => 'user_pubkeys',
 	'/users/{username}/pubkeys/{key}' => 'pubkey',
 	'/users/{username}/pubkeys/{key}.{format}' => 'pubkey',
+	'/logout' => 'logout'
 );
 
 $public_routes = array(

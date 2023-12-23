@@ -39,6 +39,7 @@ class PageSection {
 			$this->data->menu_items['/tools'] = 'Tools';
 		}
 		$this->data->menu_items['/help'] = 'Help';
+		$this->data->menu_items['/logout'] = 'Logout';
 		$this->data->relative_request_url = $relative_request_url;
 		$this->data->active_user = $active_user;
 		$this->data->web_config = $config['web'];
