@@ -39,6 +39,7 @@ if(empty($config['web']['enabled'])) {
 
 if(!$active_user->active) {
 	require('views/error403.php');
+	die;
 }
 
 if(!empty($_POST)) {
