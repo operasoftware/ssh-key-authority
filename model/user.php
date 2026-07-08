@@ -335,6 +335,9 @@ class User extends Entity {
 			} else {
 				$this->active = 1;
 			}
+			if($this->force_disable) {
+				$this->active = 0;
+			}
 			$group_member = $ldapuser[strtolower($config['ldap']['group_member_value'])];
 			$ldapgroups = $this->ldap->search($config['ldap']['dn_group'], '(&('.LDAP::escape($config['ldap']['group_member']).'='.LDAP::escape($group_member).')'.$group_filter.')', array('cn'));
 			$memberships = array();

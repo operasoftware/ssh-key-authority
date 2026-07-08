@@ -47,7 +47,7 @@ if(isset($_POST['reassign_servers']) && is_array($_POST['servers']) && $active_u
 		redirect('#details');
 	}
 } elseif(isset($_POST['edit_user']) && $active_user->admin) {
-	$user->force_disable = $_POST['force_disable'];
+	$user->force_disable = intval($_POST['force_disable']);
 	$user->get_details_from_ldap();
 	redirect('#settings');
 } else {
