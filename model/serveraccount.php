@@ -51,9 +51,11 @@ class ServerAccount extends Entity {
 	public function update() {
 		global $config;
 		// Make it impossible to set default accounts to inactive
-		if(is_array($config['defaults']['account_groups'])) {
-			if(array_key_exists($this->data['name'], $config['defaults']['account_groups'])) {
-				$this->data['active'] = true;
+		if(isset($config['defaults']['account_groups'])){ # Fix null issue
+			if(is_array($config['defaults']['account_groups'])) {
+				if(array_key_exists($this->data['name'], $config['defaults']['account_groups'])) {
+					$this->data['active'] = true;
+				}
 			}
 		}
 		$changes = parent::update();

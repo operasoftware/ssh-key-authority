@@ -213,7 +213,10 @@ function sync_server($id, $only_username = null, $preview = false) {
 					if(count($keys) > 0) {
 						if($user->active) {
 							foreach($keys as $key) {
-								$keyfile .= $prefix.$key->export()."\n";
+								if (!$key->list_destination_rules()){
+								}else{
+									$keyfile .= $prefix.$key->export()."\n";
+								}
 							}
 						} else {
 							$keyfile .= "# Inactive account\n";
